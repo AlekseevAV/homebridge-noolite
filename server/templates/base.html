@@ -8,16 +8,19 @@
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
 <body>
-    <nav class="navbar navb navbar-light navbar-expand-lg">
+    <nav class="navbar navbar-light navbar-expand-lg">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
       <div class="collapse navbar-collapse" id="navbarNav">
           <span class="navbar-brand">NooLite</span>
           <span class="small">v0.0.1</span>
-        <ul class="navbar-nav nav" id="pills-tab" role="tablist">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Менеджер запросов</a>
+        <ul class="navbar-nav">
+          <li class="nav-item {{ "active" if url == '/' }}">
+            <a class="nav-link" href="/">Запросы</a>
+          </li>
+          <li class="nav-item {{ "active" if url == '/acc' }}">
+            <a class="nav-link" href="/acc">Аксессуары</a>
           </li>
         </ul>
       </div>

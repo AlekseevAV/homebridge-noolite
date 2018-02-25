@@ -32,22 +32,19 @@ class Slf extends AccessoryBase {
 
     platform.serialPort.nlParser.on(`nlres:${nlId}`, function (nlCmd) {
       platform.log('SLF read data:', nlCmd);
-      if (!nlCmd.isError()) {
-        // cmd 130 - Ответ от исполнительного устройства
-        if (nlCmd.cmd === 130) {
-          // fmt 0 - Информация о силовом блоке
-          if (nlCmd.fmt === 0) {
-            // d0 - Код типа устройства
-            // d1 - Версия микропрограммы устройства
-            // d2 - Состояние устройства:
-            //      0 – выключено
-            //      1 – включено
-            //      2 – временное включение
-            // d3 - Текущая яркость (0-255)
+      if (nlCmd.isState()) {
+        // fmt 0 - Информация о силовом блоке
+        if (nlCmd.fmt === 0) {
+          // d0 - Код типа устройства
+          // d1 - Версия микропрограммы устройства
+          // d2 - Состояние устройства:
+          //      0 – выключено
+          //      1 – включено
+          //      2 – временное включение
+          // d3 - Текущая яркость (0-255)
 
-            let onValue = nlCmd.d2 > 0;
-            onCharacteristic.updateValue(onValue);
-          }
+          let onValue = nlCmd.d2 > 0;
+          onCharacteristic.updateValue(onValue);
         }
       }
     });
