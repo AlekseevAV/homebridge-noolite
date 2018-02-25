@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="padding: 0">
+                    <nav class="navbar navb navbar-light navbar-expand-lg">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <span class="navbar-brand">Отправить команду</span>
+                            <ul class="navbar-nav nav" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#tab-user-friendly-commands" role="tab" aria-controls="pills-home" aria-selected="true">Команды</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#tab-raw-commands" role="tab" aria-controls="pills-profile" aria-selected="false">Байты</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+                <div class="card-body">
+
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="tab-user-friendly-commands" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <form name="request_form">
+                                <input hidden type="number" class="form-control" name="res" value="0" disabled>
+                                <div class="form-row">
+                                    <div class="col">
+
+                                        <label class="control-label">mode</label>
+                                        <select class="form-control" name="mode">
+                                            <option value="0">nooLite TX</option>
+                                            <option value="1">nooLite RX</option>
+                                            <option value="2" selected>nooLite-F TX</option>
+                                            <option value="3">nooLite-F RX</option>
+                                            <option value="4">сервисный режим работы с nooLite-F</option>
+                                            <option value="5">обновления ПО nooLite-F</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">ctr</label>
+                                        <select class="form-control" name="ctr">
+                                            <option value="0">Передать команду</option>
+                                            <option value="1">Передать широковещательную команду (одновременно всем устройствам на канале CH)</option>
+                                            <option value="2">Считать ответ (состояние приѐмного буфера)</option>
+                                            <option value="3">Включить привязку</option>
+                                            <option value="4">Выключить привязку</option>
+                                            <option value="5">Очистить ячейку (канал)</option>
+                                            <option value="6">Очистить память (все каналы)</option>
+                                            <option value="7">Отвязать адрес от канала</option>
+                                            <option value="8">Передать команду по указанному адресу nooLite-F</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label class="control-label">ch</label>
+                                        <input type="number" class="form-control" name="ch" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">fmt</label>
+                                        <input type="number" class="form-control" name="fmt" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">d0</label>
+                                        <input type="number" class="form-control" name="d0" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">d1</label>
+                                        <input type="number" class="form-control" name="d1" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">d2</label>
+                                        <input type="number" class="form-control" name="d2" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">d3</label>
+                                        <input type="number" class="form-control" name="d3" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">id0</label>
+                                        <input type="number" class="form-control" name="id0" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">id1</label>
+                                        <input type="number" class="form-control" name="id1" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">id2</label>
+                                        <input type="number" class="form-control" name="id2" value="0">
+                                    </div>
+                                    <div class="col">
+                                        <label class="control-label">id3</label>
+                                        <input type="number" class="form-control" name="id3" value="0">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label class="control-label">cmd</label>
+                                        <select type="number" class="form-control" name="cmd">
+                                            <option value="0">Выключить нагрузку</option>
+                                            <option value="1">Плавное понижение яркости</option>
+                                            <option value="2">Включить нагрузку</option>
+                                            <option value="3">Плавное повышение яркости</option>
+                                            <option value="4">Включить или выключить нагрузку</option>
+                                            <option value="5">Плавное изменение яркости в обратном направлении</option>
+                                            <option value="6">Установить заданную яркость</option>
+                                            <option value="7">Вызвать записанный сценарий</option>
+                                            <option value="8">Записать сценарий в память</option>
+                                            <option value="9">Запустить процедуру стирания адреса управляющего устройства из памяти исполнительного</option>
+                                            <option value="10">Прекратить действие команд Bright_Down, Bright_Up, Bright_Back</option>
+                                            <option value="11">Понизить яркость на шаг</option>
+                                            <option value="12">Повысить яркость на шаг</option>
+                                            <option value="13">Плавное изменение яркости с заданным направлением и скоростью</option>
+                                            <option value="15">Сообщить исполнительному устройству, что управляющее хочет активировать режим привязки</option>
+                                            <option value="16">Плавное изменение цвета в RGB-контроллере по радуге</option>
+                                            <option value="17">Переключение между стандартными цветами в RGB-контроллере</option>
+                                            <option value="18">Переключение между режимами RGB контроллера</option>
+                                            <option value="19">Изменение скорости работы режимов RGB контроллера в обратном направлении</option>
+                                            <option value="25">Включить на заданное время</option>
+                                            <option value="26">Установить режим работы</option>
+                                            <option value="128">Получить состояние</option>
+                                            <option value="129">Установить состояние</option>
+                                            <option value="131">Включить сервисный режим</option>
+                                            <option value="132">Очистка памяти</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button style="margin-top: 10px" class="btn btn-success">Отправить</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="tab-raw-commands" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <form id="request-bytes-form" name="request_form" class="form-inline">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">mode</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="mode" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">ctr</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="ctr" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">res</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="res" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">ch</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="ch" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">cmd</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="cmd" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">fmt</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="fmt" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">d0</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="d0" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">d1</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="d1" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">d2</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="d2" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">d3</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="d3" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">id0</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="id0" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">id1</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="id1" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">id2</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="id2" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">id3</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" class="form-control" name="id3" value="0">
+                                    </div>
+                                </div>
+                                <button class="btn btn-success">Отправить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button style="margin: 20px" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#doc" aria-expanded="false" aria-controls="collapseExample">
+                Справка
+            </button>
+
+            <div class="collapse" id="doc">
+                <div class="card card-body">
+                    <table class="table table-bordered table-responsive">
+                        <thead>
+                        <tr>
+                            <th>Параметр</th>
+                            <th>Описание</th>
+                            <th>Запрос</th>
+                            <th>Ответ</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>MODE</td>
+                            <td>Режим работы адаптера</td>
+                            <td colspan="2">
+                                0 – режим nooLite TX<br>
+                                1 – режим nooLite RX<br>
+                                2 – режим nooLite-F TX<br>
+                                3 – режим nooLite-F RX<br>
+                                4 – сервисный режим работы с nooLite-F TX/RX (считывание карты привязки к адаптеру)<br>
+                                5 – режим обновления ПО nooLite-F<br>
+                                6 – настройка адаптера (скорость UART, сброс настроек, битрейт)<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CTR</td>
+                            <td>Управление адаптером/Код ответа</td>
+                            <td>
+                                0 – Передать команду<br>
+                                1 – Передать команды с выдачей ответа (широковещательная команда)<br>
+                                2 – Считать ответ (состояние приёмного буфера)<br>
+                                3 – Включить привязку<br>
+                                4 – Выключить привязку<br>
+                                5 – Очистить ячейку (канал)<br>
+                                6 – Очистить память (все каналы)<br>
+                                7 – Отвязать адрес от канала<br>
+                                8 – Передать команду по указанному адресу nooLite-F<br>
+                            </td>
+                            <td>
+                                0 – Команда выполнена<br>
+                                1 – Нет ответа от блока<br>
+                                2 – Ошибка во время выполнения<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RES</td>
+                            <td>Зарезервирован, не используется</td>
+                            <td>
+                                Значение=0<br>
+                            </td>
+                            <td>В ответе используется TOGL</td>
+                        </tr>
+                        <tr>
+                            <td>TOGL</td>
+                            <td>Количество оставшихся ответов от адаптера, значение TOGL</td>
+                            <td>В ответе используется RES</td>
+                            <td>
+                                Для nooLite-F TX:<br>
+                                В значении приводится количество пакетов, которые осталось передать адаптеру для завершения опроса канала.<br>
+                                Для nooLite RX и nooLite-F RX:<br>
+                                Значение TOGL. Изменяется при приходе новой команды на адаптер (увеличивается на единицу).<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CH</td>
+                            <td>Адрес канала, ячейки привязки</td>
+                            <td colspan="2">
+                                Значение адреса канала или номера ячейки для привязки: 0...63 для MTRF-64
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CMD</td>
+                            <td>Команда</td>
+                            <td colspan="2">
+                                Команда, отправляемая с адаптера. См. описание в таблице «Список команд»
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>FMT</td>
+                            <td>Формат</td>
+                            <td colspan="2">
+                                Количество данных, передаваемых вместе с командой и их назначение. См. описание в таблице «Формат и Данные»
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D0-D3</td>
+                            <td>Данные</td>
+                            <td colspan="2">
+                                Количество данных, передаваемых вместе с командой и их назначение. См. описание в таблице «Формат и Данные»
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ID0-ID3</td>
+                            <td>Идентификатор блока</td>
+                            <td colspan="2">
+                                Адрес устройства в системе nooLite-F
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="js/api.js"></script>
+{% endblock %}

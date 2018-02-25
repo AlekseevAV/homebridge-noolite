@@ -1,0 +1,28 @@
+{
+  "name": "homebridge-noolite",
+  "version": "0.0.1",
+  "description": "NooLite plugin for Homebridge",
+  "keywords": [
+    "homebridge-plugin",
+    "noolite"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlekseevAV/homebridge-noolite.git"
+  },
+  "author": "Aleksandr Alekseev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlekseevAV/homebridge-noolite/issues"
+  },
+  "homepage": "https://github.com/AlekseevAV/homebridge-noolite",
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.4.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "nunjucks": "^3.1.0",
+    "serialport": "^6.0.5"
+  }
+}

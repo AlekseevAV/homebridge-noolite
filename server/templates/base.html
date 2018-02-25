@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    {% block css %}{% endblock %}
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+</head>
+<body>
+    <nav class="navbar navb navbar-light navbar-expand-lg">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <span class="navbar-brand">NooLite</span>
+          <span class="small">v0.0.1</span>
+        <ul class="navbar-nav nav" id="pills-tab" role="tablist">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Менеджер запросов</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>
