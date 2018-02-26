@@ -1,4 +1,5 @@
 const path = require('path');
+const SSE = require("sse-node");
 const nunjucks = require('nunjucks');
 const express = require('express');
 const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
@@ -120,6 +121,20 @@ module.exports = function (nooLitePlatform) {
         res.json({status: 'ok', accList: discoveredAcc});
     }, 1000);
 
+  });
+
+  app.get('/api/nl-res-log/', function (req, res) {
+      const client = SSE(req, res);
+
+      let nlResHandler = function (nlRes) {
+          client.send(nlRes, 'nlres');
+      };
+
+      // Вешаем обработчик команд
+      nooLitePlatform.serialPort.nlParser.on('nlres', nlResHandler);
+
+      // Удаляем обработчик, когда клиент отключился
+      client.onClose(() => nooLitePlatform.serialPort.nlParser.removeListener('nlres', nlResHandler));
   });
 
   return app;

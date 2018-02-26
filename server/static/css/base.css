@@ -36,3 +36,12 @@
 .byte_cmd {
     background: #eae7f7;
 }
+
+
+.console {
+    font-family: Courier;
+    color: #CCCCCC;
+    background: #000000;
+    border: 3px double #CCCCCC;
+    padding: 10px;
+}

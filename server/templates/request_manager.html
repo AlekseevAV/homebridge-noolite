@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col">
             <div class="card">
                 <div class="card-header" style="padding: 0">
                     <nav class="navbar navb navbar-light navbar-expand-lg">
@@ -232,7 +232,16 @@
                 </div>
             </div>
 
-            <button style="margin: 20px" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#doc" aria-expanded="false" aria-controls="collapseExample">
+            <div class="card" style="margin: 20px 0;">
+              <div class="card-header d-flex justify-content-between">
+                <span>Лог</span>
+                <button class="btn btn-info" onclick="clearLog();">Очистить</button>
+              </div>
+              <div class="card-body console" id="logBody" style="max-height: 300px; overflow-y: scroll"></div>
+            </div>
+
+
+            <button style="margin: 20px 0" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#doc" aria-expanded="false" aria-controls="collapseExample">
                 Справка
             </button>
 
@@ -346,5 +355,5 @@
 
 
 {% block js %}
-<script src="js/api.js"></script>
+  <script src="js/api.js"></script>
 {% endblock %}
