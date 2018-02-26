@@ -32,20 +32,18 @@ class Slf extends AccessoryBase {
 
     platform.serialPort.nlParser.on(`nlres:${nlId}`, function (nlCmd) {
       platform.log('SLF read data:', nlCmd);
-      if (nlCmd.isState()) {
+      if (nlCmd.isState() && nlCmd.fmt === 0) {
         // fmt 0 - Информация о силовом блоке
-        if (nlCmd.fmt === 0) {
-          // d0 - Код типа устройства
-          // d1 - Версия микропрограммы устройства
-          // d2 - Состояние устройства:
-          //      0 – выключено
-          //      1 – включено
-          //      2 – временное включение
-          // d3 - Текущая яркость (0-255)
+        // d0 - Код типа устройства
+        // d1 - Версия микропрограммы устройства
+        // d2 - Состояние устройства:
+        //      0 – выключено
+        //      1 – включено
+        //      2 – временное включение
+        // d3 - Текущая яркость (0-255)
 
-          let onValue = nlCmd.d2 > 0;
-          onCharacteristic.updateValue(onValue);
-        }
+        let onValue = nlCmd.d2 > 0;
+        onCharacteristic.updateValue(onValue);
       }
     });
 
@@ -86,8 +84,9 @@ class Slf extends AccessoryBase {
         });
       })
       .on('get', function(callback) {
+        let acc = this;
 
-        platform.log(accessoryName, "On get -> " + this.value);
+        platform.log(accessoryName, "get value");
 
         let command = new NooLiteRequest(
           nlChannel,
@@ -103,14 +102,28 @@ class Slf extends AccessoryBase {
           ...nlId.split(':')
         );
 
+        platform.serialPort.nlParser.once(`nlres:${nlId}`, function (nlCmd) {
+          platform.log('SLF once read data:', nlCmd);
+          if (nlCmd.isError()) {
+            callback(new Error('Error on write: ' + nlCmd));
+            return;
+          }
+
+          let onValue = acc.value;
+
+          if (nlCmd.isState() && nlCmd.fmt === 0) {
+            onValue = nlCmd.d2 > 0;
+          }
+
+          callback(null, onValue);
+        });
+
         platform.serialPort.write(command.toBytes(), null, function (err) {
           if (err) {
             return platform.log('Error on write: ', err.message);
           }
           platform.log('message written');
         });
-
-        callback(null, this.value);
       });
   }
 
