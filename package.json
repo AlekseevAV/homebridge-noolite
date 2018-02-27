@@ -1,6 +1,6 @@
 {
   "name": "homebridge-noolite",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "NooLite plugin for Homebridge",
   "keywords": [
     "homebridge-plugin",
