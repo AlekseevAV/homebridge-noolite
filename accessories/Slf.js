@@ -43,7 +43,10 @@ class Slf extends AccessoryBase {
         // d3 - Текущая яркость (0-255)
 
         let onValue = nlCmd.d2 > 0;
-        onCharacteristic.updateValue(onValue);
+
+        if (onCharacteristic.value !== onValue) {
+            onCharacteristic.setValue(onValue);
+        }
       }
     });
 

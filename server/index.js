@@ -1,11 +1,14 @@
 const path = require('path');
 const SSE = require("sse-node");
+var bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const express = require('express');
 const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
 const app = express();
 
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/static')));
 app.set('views', path.join(__dirname, '/templates'));
 app.set('view engine', 'html');
@@ -32,6 +35,55 @@ module.exports = function (nooLitePlatform) {
       title: 'NooLite - Запросы',
       channels: [...Array(64).keys()]
     });
+  });
+
+  app.get('/api/hk/acc', function (req, res) {
+      res.json({status: 'ok', accList: nooLitePlatform.accessories});
+  });
+
+  app.post('/api/hk/acc', function (req, res) {
+    let acc = req.body;
+    let newAcc = nooLitePlatform.addAccessory(acc.name, acc.type, acc.channel, acc.id);
+
+    res.json({status: 'ok', acc: newAcc});
+  });
+
+  app.get('/api/hk/acc/:accUUID', function (req, res) {
+      res.json({status: 'ok', acc: nooLitePlatform.AccessoryUtil.getByUUID(req.params.accUUID)});
+  });
+
+  app.delete('/api/hk/acc/:accUUID', function (req, res) {
+    nooLitePlatform.removeAccessory(req.params.accUUID);
+
+    res.json({status: 'ok'});
+  });
+
+  app.get('/api/hk/acc/:accUUID/services/:sUUID', function (req, res) {
+    res.json({status: 'ok', services: nooLitePlatform.AccessoryUtil.getAccService(req.params.accUUID, req.params.sUUID)});
+  });
+
+  app.get('/api/hk/acc/:accUUID/services/:sUUID/characteristics/:cUUID', function (req, res) {
+    res.json({
+        status: 'ok',
+        characteristic: nooLitePlatform.AccessoryUtil.getAccSerciceCharacteristic(req.params.accUUID, req.params.sUUID, req.params.cUUID)
+    });
+  });
+
+  app.patch('/api/hk/acc/:accUUID/services/:sUUID/characteristics/:cUUID', function (req, res) {
+    let characteristic = nooLitePlatform.AccessoryUtil.getAccSerciceCharacteristic(req.params.accUUID, req.params.sUUID, req.params.cUUID);
+
+    if (characteristic && req.query.value) {
+      let newValue = JSON.parse(req.query.value);
+
+      characteristic.setValue(newValue, (err) => {
+        if (!err) {
+          res.json({status: 'ok', characteristic: characteristic});
+          return;
+        }
+
+        res.json({status: 'fail'});
+      });
+    }
   });
 
   app.get('/add', function (req, res) {

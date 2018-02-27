@@ -43,7 +43,7 @@ class AccessoryBase {
 
   init() {
     let that = this;
-    let uuid = this.platform.AccessoryUtil.getAccessoryUUID(this.nlChannel + this.nlId);
+    let uuid = this.platform.AccessoryUtil.getAccessoryUUID(this.nlChannel, this.nlType, this.nlId);
     let accessory = this.platform.AccessoryUtil.getByUUID(uuid);
     if(null === accessory) {
       accessory = new this.platform.PlatformAccessory(this.accessoryName, uuid, this.getAccessoryCategory());

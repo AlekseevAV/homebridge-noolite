@@ -229,10 +229,11 @@ class NooLitePlatform {
   addAccessory(accessoryName, nlType, nlChannel, nlid) {
     this.log("Add Accessory");
 
-    let newAccessory = this.AccessoryUtil.add(accessoryName, 'slf', 0, '00:00:02:112');
+    let newAccessory = this.AccessoryUtil.add(accessoryName, nlType, nlChannel, nlid);
 
     this.accessories.push(newAccessory);
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [newAccessory]);
+    return newAccessory;
   }
 
   updateAccessoriesReachability() {
@@ -243,11 +244,20 @@ class NooLitePlatform {
   }
 
   // Sample function to show how developer can remove accessory dynamically from outside event
-  removeAccessory() {
+  removeAccessory(UUID) {
     this.log("Remove Accessory");
-    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.accessories);
 
-    this.accessories = [];
+    let acc = this.AccessoryUtil.getByUUID(UUID);
+    if (acc) {
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [acc]);
+        let accIndex = this.accessories.indexOf(acc);
+        if (accIndex > -1) {
+            this.accessories.splice(accIndex, 1);
+        }
+    } else {
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.accessories);
+      this.accessories = [];
+    }
   }
 
   registerPlatformAccessories(accessories) {
@@ -262,7 +272,6 @@ class NooLitePlatform {
     this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, accessories);
     accessories.forEach(function(accessory, index, arr) {
         this.log.info("delete accessory - UUID: " + accessory.UUID);
-        this.AccessoryUtil.remove(accessory);
     });
   }
 

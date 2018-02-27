@@ -9,12 +9,46 @@ class AccessoryUtil {
         this.availableAccessories = availableAccessories;
     }
 
-    getByUUID(uuid) {
-        return (uuid in this.platform.accessories) ? this.platform.accessories[uuid] : null;
+    getAccSerciceCharacteristic(accUUID, serviceUUID, characteriscticUUIDOrName) {
+        let service = this.getAccService(accUUID, serviceUUID);
+
+        if (service) {
+            for (let characteristic of service.characteristics) {
+                if (characteristic.UUID === characteriscticUUIDOrName || characteristic.displayName === characteriscticUUIDOrName) {
+                    return characteristic;
+                }
+            }
+        }
+
+        return null;
     }
 
-    getAccessoryUUID(nlChannel, nlId) {
-        return this.platform.UUIDGen.generate(nlChannel + nlId);
+    getAccService(accUUID, serviceUUID) {
+        let acc = this.getByUUID(accUUID);
+
+        if (acc) {
+            for (let service of acc.services) {
+                if (service.UUID === serviceUUID) {
+                    return service;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    getByUUID(uuid) {
+        for (let acc of this.platform.accessories) {
+            if (acc.UUID === uuid) {
+                return acc;
+            }
+        }
+
+        return null;
+    }
+
+    getAccessoryUUID(nlChannel, nlType, nlId) {
+        return this.platform.UUIDGen.generate(nlChannel + nlType + nlId);
     }
 
     getByChannel(nlChannel) {
@@ -24,14 +58,6 @@ class AccessoryUtil {
         }
       }
       return null;
-    }
-
-    processSerialResponse(response) {
-      let accUUID = this.getAccessoryUUID(response.ch, response.getStrId());
-      let acc = this.getByUUID(accUUID);
-      if (acc !== null){
-        let accClass = this.getAccessoryClass(acc);
-      }
     }
 
     getAccessoryClass(accessory) {
@@ -60,17 +86,13 @@ class AccessoryUtil {
         return;
       }
 
-      let accUUID = this.getAccessoryUUID(nlChannel, nlId);
+      let accUUID = this.getAccessoryUUID(nlChannel, nlType, nlId);
       let existAccessory = this.getByUUID(accUUID);
       if (existAccessory !== null) {
         return existAccessory;
       }
 
       return new availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
-    }
-
-    remove(uuid) {
-        delete this.platform.accessories[uuid];
     }
 }
 
