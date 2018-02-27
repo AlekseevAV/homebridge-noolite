@@ -153,9 +153,9 @@ class NooLitePlatform {
     let respDict;
     let availableTypes = [];
 
-    for (let typeCode in this.AccessoryUtil.availableAccesories) {
-      if(this.AccessoryUtil.availableAccesories.hasOwnProperty(typeCode)) {
-        let type = this.AccessoryUtil.availableAccesories[typeCode];
+    for (let typeCode in this.AccessoryUtil.availableAccessories) {
+      if(this.AccessoryUtil.availableAccessories.hasOwnProperty(typeCode)) {
+        let type = this.AccessoryUtil.availableAccessories[typeCode];
         availableTypes.push(`${typeCode}: ${type.displayName()} ${type.description()}`);
       }
     }
