@@ -13,7 +13,7 @@ class Slf extends AccessoryBase {
   getServices() {
     let result = super.getServices();
 
-    let service = new this.platform.Service.Lightbulb("Test Light");
+    let service = new this.platform.Service.Lightbulb(this.accessoryName);
     service.getCharacteristic(this.platform.Characteristic.On);
     result.push(service);
 

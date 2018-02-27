@@ -196,7 +196,7 @@ class NooLitePlatform {
       this.uiSessions[request.sid] = {
         name: request.response.inputs.name,
         channel: request.response.inputs.channel,
-        id: request.response.inputs.id,
+        id: request.response.inputs.nooliteId,
       };
       context['step'] = 3;
     } else if (current_step === 3) {
@@ -217,7 +217,7 @@ class NooLitePlatform {
 
       context['step'] = 1;
       delete this.uiSessions[request.sid];
-      // callback(null, "platform", true, {"platform":PLATFORM_NAME, "otherConfig":"SomeData"});
+      callback(null);
       return;
     }
 
