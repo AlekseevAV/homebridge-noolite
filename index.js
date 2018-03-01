@@ -1,3 +1,4 @@
+const pjson = require('./package.json')
 const server = require('./server');
 const AccessoryUtil = require('./accessories');
 const SerialPort = require('serialport');
@@ -5,7 +6,7 @@ const addNooLiteCharacteristics = require('./lib/customCharacteristics');
 const NooLiteSerialParser = require('./lib/NooLiteSerialParser');
 
 
-let PLUGIN_NAME = 'homebridge-noolite',
+let PLUGIN_NAME = pjson.name,
     PLATFORM_NAME = 'NooLitePlatform';
 
 
@@ -26,7 +27,7 @@ module.exports = function (homebridge) {
 
 class NooLitePlatform {
   constructor(log, config, api) {
-    log("NooLitePlatform Init");
+    log("NooLitePlatform v.", pjson.version);
     let platform = this;
 
     // Get settings from config
