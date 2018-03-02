@@ -74,14 +74,18 @@ class NooLitePlatform {
     let platform = this;
     
     let serialPort =  new SerialPort(serialPortPath, (err) => {
-      // Error serial port open callback
-      platform.log.error('Cannot connect to NooLite-MTRF: ', err.message);
-      SerialPort.list()
-        .then((ports) => {
-          platform.log.info('Available serial ports is:')
-          ports.forEach((port) => console.info('\t', port.comName))
-        })
-        .catch((err) => platform.log.error('Cannot get serial port list: ', err)) 
+      if (err) {
+        // Error serial port open callback
+        platform.log.error('Cannot connect to NooLite-MTRF: ', err.message);
+        SerialPort.list()
+          .then((ports) => {
+            platform.log.info('Available serial ports is:')
+            ports.forEach((port) => console.info('\t', port.comName))
+          })
+          .catch((err) => platform.log.error('Cannot get serial port list: ', err)) 
+      } else {
+        platform.log('Sucess connect to NooLite MTRF')
+      }
     });
 
     serialPort.nlParser = serialPort.pipe(new NooLiteSerialParser());

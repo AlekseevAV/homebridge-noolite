@@ -20,7 +20,7 @@ module.exports = function(nooLitePlatform){
     // Получить аксессуар по UUID
     .get((req, res) => res.json({status: 'ok', acc: nooLitePlatform.AccessoryUtil.getByUUID(req.params.accUUID)}))
     // Удалить аксессуар по UUID
-    .delete('/hk/acc/:accUUID', function (req, res) {
+    .delete((req, res) => {
       nooLitePlatform.removeAccessory(req.params.accUUID);
       res.json({status: 'ok'});
     });
