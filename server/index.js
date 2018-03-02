@@ -19,7 +19,6 @@ nunjucks.configure(path.join(__dirname, '/templates'), {
 });
 
 module.exports = function (nooLitePlatform) {
-
   app.get('/', function (req, res) {
     res.render('request_manager', {
       url: req.originalUrl,
