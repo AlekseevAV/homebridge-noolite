@@ -1,5 +1,6 @@
 const SSE = require("sse-node");
 const express = require('express');
+const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
 
 router = express.Router();
 
