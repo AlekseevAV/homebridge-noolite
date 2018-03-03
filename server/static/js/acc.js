@@ -62,5 +62,64 @@ $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
     discoverAccs(selectedChannel);
 });
 
+let updateHomeKitAccs = () => {
+    $.get(`/api/hk/acc`).done((data) => {
+        let accTableBody = $('#hk-list').find(`tbody`);
 
-setTimeout(discoverAccs(currentChannel), 200);
+        accTableBody.html('');
+
+        let accRows = '';
+        for (let acc of data.accList) {
+            let nlData = acc.context.NooLite;
+
+            let characteristicsList = '';
+            for (let service of acc.services) {
+                // Пропускаем Identify сервис
+                if (service.UUID === "0000003E-0000-1000-8000-0026BB765291") {
+                    continue;
+                }
+                
+                for (let characteristic of service.characteristics) {
+                    characteristicsList += `${characteristic.displayName}: ${characteristic.value}<br/>`;
+                }
+            }
+
+            accRows += `
+                <tr data-uuid="${acc.UUID}" >
+                    <td>${acc.displayName}</td>
+                    <td>${nlData.type}</td>
+                    <td>${nlData.channel}</td>
+                    <td>${nlData.id}</td>
+                    <td>${characteristicsList}</td>
+                    <td style="cursor: pointer;" onclick="deleteHkAcc(this)">X</td>
+                 </tr>
+             `;
+        }
+
+        accTableBody.html(accRows || 'Не найдено');
+    });
+};
+
+let deleteHkAcc = function(accRow) {
+    $.ajax({
+        url: `/api/hk/acc/${accRow.parentElement.dataset.uuid}`,
+        type: 'DELETE'
+    }).done(() => {
+        updateHomeKitAccs();
+    });
+}
+
+$('form[name="create-hk-acc"]').each(function () {
+  var form = $(this);
+  form.submit(function (e) {
+    $.post('/api/hk/acc', form.serialize()).done(() => {
+      updateHomeKitAccs();
+    });
+    e.preventDefault();
+  });
+});
+
+setTimeout(() => {
+    discoverAccs(currentChannel);
+    updateHomeKitAccs();
+}, 200);

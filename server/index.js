@@ -27,10 +27,20 @@ module.exports = function (nooLitePlatform) {
   });
 
   app.get('/acc', function (req, res) {
+    let availableAccTypes = [];
+
+    for (let typeCode in nooLitePlatform.AccessoryUtil.availableAccessories) {
+      if(nooLitePlatform.AccessoryUtil.availableAccessories.hasOwnProperty(typeCode)) {
+        let type = nooLitePlatform.AccessoryUtil.availableAccessories[typeCode];
+        availableAccTypes.push({code: typeCode, name: `${type.displayName()} ${type.description()}`});
+      }
+    }
+
     res.render('acc', {
       url: req.originalUrl,
       title: 'NooLite - Запросы',
-      channels: [...Array(64).keys()]
+      channels: [...Array(64).keys()],
+      accTypes: availableAccTypes
     });
   });
 
