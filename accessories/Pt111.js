@@ -39,8 +39,8 @@ class Pt111 extends AccessoryBase {
         case 21:
           let tempHumData = nlCmd.sensorData();
 
-          //   001-датчик температуры (PT112)
-          if (tempHumData.type === '001') {
+          //   010-датчик температуры (PT111)
+          if (tempHumData.type === '010') {
             if (tempHumData.temp !== undefined) {
               currentTemperature.setValue(tempHumData.temp);
             }
@@ -64,7 +64,7 @@ class Pt111 extends AccessoryBase {
   getAccessoryInformation() {
         return {
             'Manufacturer': 'NooLite',
-            'Model': 'PT112',
+            'Model': 'PT111',
             'SerialNumber': '0.0.1'
         };
     }
