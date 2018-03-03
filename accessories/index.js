@@ -3,6 +3,7 @@ const availableAccessories = {
     'su': require('./Su'),
     'pt112': require('./Pt112'),
     'pt111': require('./Pt111'),
+    'pm112': require('./Pm112')
 };
 
 
