@@ -2,14 +2,20 @@ class AccessoryBase {
   static displayName() {}
   static description() {}
 
-  constructor(platform, accessoryName, nlType, nlChannel, nlId) {
-    this.accessoryName = accessoryName;
+  constructor(platform, accessory, accessoryName, nlType, nlChannel, nlId) {
     this.platform = platform;
-    this.nlType = nlType;
-    this.nlChannel = nlChannel;
-    this.nlId = nlId;
+    this.accessory = accessory;
+    this.accessoryName = accessoryName || accessory.getService('NooLiteService').getCharacteristic('Name').value;
+    this.nlType = nlType || accessory.getService('NooLiteService').getCharacteristic('nlType').value;
+    this.nlChannel = nlChannel || accessory.getService('NooLiteService').getCharacteristic('nlChannel').value;
+    this.nlId = nlId || accessory.getService('NooLiteService').getCharacteristic('nlId').value;
 
     return this.init();
+  }
+
+  log(...args) {
+    args.unshift(`${this.accessoryName} (${this.nlType}-${this.nlId})`);
+    this.platform.log.apply(console, args);
   }
 
   getAccessoryInformation() {
@@ -20,50 +26,43 @@ class AccessoryBase {
     return null;
   }
 
-  static setCharacteristicCallbacks(platform, accessory) {
-  }
-
   getServices() {
     let result = [];
 
     let nlService = new this.platform.Service.NooLiteService(this.accessoryName);
-    nlService.getCharacteristic(this.platform.Characteristic.NooLiteType).updateValue(this.nlType);
-    nlService.getCharacteristic(this.platform.Characteristic.NooLiteChannel).updateValue(this.nlChannel);
-    nlService.getCharacteristic(this.platform.Characteristic.NooLiteId).updateValue(this.nlId);
+      
     result.push(nlService);
-
-    // let batteryService  = new this.Service.BatteryService(accessoryName);
-    // batteryService.getCharacteristic(this.Characteristic.StatusLowBattery);
-    // batteryService.getCharacteristic(this.Characteristic.BatteryLevel);
-    // batteryService.getCharacteristic(this.Characteristic.ChargingState);
-    // result.push(batteryService);
 
     return result;
   }
 
-  init() {
-    let that = this;
-    let uuid = this.platform.AccessoryUtil.getAccessoryUUID(this.nlChannel, this.nlType, this.nlId);
-    let accessory = this.platform.AccessoryUtil.getByUUID(uuid);
-    if(null === accessory) {
-      accessory = new this.platform.PlatformAccessory(this.accessoryName, uuid, this.getAccessoryCategory());
-      let accessoryInformation = this.getAccessoryInformation();
-      accessory.getService(this.platform.Service.AccessoryInformation)
-        .setCharacteristic(this.platform.Characteristic.Manufacturer, accessoryInformation['Manufacturer'] || "Undefined")
-        .setCharacteristic(this.platform.Characteristic.Model, accessoryInformation['Model'] || "Undefined")
-        .setCharacteristic(this.platform.Characteristic.SerialNumber, accessoryInformation['SerialNumber'] || "Undefined");
-
-      this.getServices().forEach(function(service, index, serviceArr) {
-          accessory.addService(service, that.accessoryName);
-      });
-
-      this.constructor.setCharacteristicCallbacks(this.platform, accessory);
-      return accessory;
+  setCharacteristicForService(service) {
+    switch(typeof service) {
+      case this.platform.Service.NooLiteService:
+        service
+          .setCharacteristic(this.platform.Characteristic.NooLiteType, this.nlType)
+          .setCharacteristic(this.platform.Characteristic.NooLiteChannel, this.nlChannel)
+          .setCharacteristic(this.platform.Characteristic.NooLiteId, this.nlId);
+      case this.platform.Service.AccessoryInformation:
+        let accessoryInformation = this.getAccessoryInformation();
+        service
+          .setCharacteristic(this.platform.Characteristic.Manufacturer, accessoryInformation['Manufacturer'] || "Undefined")
+          .setCharacteristic(this.platform.Characteristic.Model, accessoryInformation['Model'] || "Undefined")
+          .setCharacteristic(this.platform.Characteristic.SerialNumber, accessoryInformation['SerialNumber'] || "Undefined");
+        return true;
     }
-
-    return null;
   }
 
+  initAccessory(a) {
+    if (this.accessory)
+      let servicesList = this.accessory.services
+    else
+      let servicesList = this.getServices()
+    
+    for (let service of servicesList) {
+      this.setCharacteristicForService(service);
+    }
+  }
 }
 
 module.exports = AccessoryBase;

@@ -125,10 +125,9 @@ class NooLitePlatform {
   // Update current value.
   configureAccessory(accessory) {
     this.log(accessory.displayName, "Configure Accessory");
-    let platform = this;
 
     if(this.AccessoryUtil) {
-        this.AccessoryUtil.addExist(accessory);
+        this.AccessoryUtil.add(accessory);
     }
 
     // Set the accessory to reachable if plugin can currently process the accessory,
@@ -136,8 +135,8 @@ class NooLitePlatform {
     // accessory.updateReachability()
     accessory.reachable = true;
 
-    accessory.on('identify', function(paired, callback) {
-      platform.log(accessory.displayName, "Identify!!!");
+    accessory.on('identify', (paired, callback) => {
+      this.log(accessory.displayName, "Identify!!!");
       callback();
     });
 
@@ -234,7 +233,7 @@ class NooLitePlatform {
 
   // Sample function to show how developer can add accessory dynamically from outside event
   addAccessory(accessoryName, nlType, nlChannel, nlid) {
-    this.log("Add Accessory");
+    this.log(`Add Accessory: ${accessoryName} ${nlType} ${nlChannel} ${nlid}`);
 
     let newAccessory = this.AccessoryUtil.add(accessoryName, nlType, nlChannel, nlid);
 

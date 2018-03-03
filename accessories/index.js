@@ -1,5 +1,5 @@
 const availableAccessories = {
-  'slf': require('./Slf')
+    'slf': require('./Slf')
 };
 
 
@@ -52,47 +52,50 @@ class AccessoryUtil {
     }
 
     getByChannel(nlChannel) {
-      for (let accessory of this.platform.accessories) {
-        if (accessory.nlChannel === nlChannel) {
-          return accessory;
+        for (let accessory of this.platform.accessories) {
+            if (accessory.nlChannel === nlChannel) {
+                return accessory;
+            }
         }
-      }
-      return null;
+        return null;
     }
 
     getAccessoryClass(accessory) {
-      let nlType = accessory.getService(this.platform.Service.NooLiteService)
-                            .getCharacteristic(this.platform.Characteristic.NooLiteType).value;
+        let nlType = accessory.getService(this.platform.Service.NooLiteService)
+            .getCharacteristic(this.platform.Characteristic.NooLiteType).value;
 
-      if (nlType in availableAccessories) {
-        return availableAccessories[nlType];
-      } else {
-        this.platform.log('Unknown noolite type: ' + nlType);
-      }
-      return null;
+        if (nlType in availableAccessories) {
+            return availableAccessories[nlType];
+        } else {
+            this.platform.log('Unknown noolite type: ' + nlType);
+        }
+        return null;
     }
 
-    addExist(accessory) {
-      let accessoryClass = this.getAccessoryClass(accessory);
+    initAccessory(accessory) {
+        let nlType = accessory.getService(this.platform.Service.NooLiteService)
+            .getCharacteristic(this.platform.Characteristic.NooLiteType).value;
+        let accessoryName = nlService.getCharacteristic(platform.Characteristic.Name).value;
+        let nlChannel = nlService.getCharacteristic(platform.Characteristic.NooLiteChannel).value;
+        let nlId = nlService.getCharacteristic(platform.Characteristic.NooLiteId).value;
 
-      if (accessoryClass) {
-        accessoryClass.setCharacteristicCallbacks(this.platform, accessory);
-      }
+        return new availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
     }
 
     add(accessoryName, nlType, nlChannel, nlId) {
-      if (!(nlType in availableAccessories)) {
-        console.log('Unknown noolite type: ' + nlType);
-        return;
-      }
+        if (!(nlType in availableAccessories)) {
+            console.log('Unknown noolite type: ' + nlType);
+            return;
+        }
 
-      let accUUID = this.getAccessoryUUID(nlChannel, nlType, nlId);
-      let existAccessory = this.getByUUID(accUUID);
-      if (existAccessory !== null) {
-        return existAccessory;
-      }
+        let accUUID = this.getAccessoryUUID(nlChannel, nlType, nlId);
+        let existAccessory = this.getByUUID(accUUID);
+        if (existAccessory !== null) {
+            return existAccessory;
+        }
 
-      return new availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
+        availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
+        return new this.platform.PlatformAccessory(this.accessoryName, uuid, this.getAccessoryCategory());
     }
 }
 

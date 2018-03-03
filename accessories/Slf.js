@@ -10,28 +10,12 @@ class Slf extends AccessoryBase {
     return 'блок с протоколом nooLite-F';
   }
 
-  getServices() {
-    let result = super.getServices();
+  init() {
+    super.init();
 
-    let service = new this.platform.Service.Lightbulb(this.accessoryName);
-    service.getCharacteristic(this.platform.Characteristic.On);
-    result.push(service);
-
-    return result;
-  }
-
-  static setCharacteristicCallbacks(platform, accessory) {
-    super.setCharacteristicCallbacks(platform, accessory);
-
-    let nlService = accessory.getService(platform.Service.NooLiteService);
-    let accessoryName = nlService.getCharacteristic(platform.Characteristic.Name).value;
-    let nlChannel = nlService.getCharacteristic(platform.Characteristic.NooLiteChannel).value;
-    let nlId = nlService.getCharacteristic(platform.Characteristic.NooLiteId).value;
-
-    let onCharacteristic = accessory.getService(platform.Service.Lightbulb).getCharacteristic(platform.Characteristic.On);
-
-    platform.serialPort.nlParser.on(`nlres:${nlId}`, function (nlCmd) {
-      platform.log('SLF read data:', nlCmd);
+    // Обработка поступивших команд от MTRF
+    this.platform.serialPort.nlParser.on(`nlres:${nlId}`, (nlCmd) => {
+      this.log('read data by ID:', nlCmd);
       if (nlCmd.isState() && nlCmd.fmt === 0) {
         // fmt 0 - Информация о силовом блоке
         // d0 - Код типа устройства
@@ -49,85 +33,84 @@ class Slf extends AccessoryBase {
         }
       }
     });
+  }
 
-    onCharacteristic
-      .on('set', function(value, callback) {
-        platform.log(accessoryName, "Light --> " + value);
+  getServices() {
+    this.log('getting services')
+    let result = super.getServices();
+    let service = new this.platform.Service.Lightbulb(this.accessoryName);
+    result.push(service);
+  }
 
-        let command = new NooLiteRequest(
-          nlChannel,
-          (value ? 2 : 0),
-          2,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          ...nlId.split(':')
-        );
+  setCharacteristicsForService(service) {
+    if (super.setCharacteristicForService(service)) return;
 
-        platform.serialPort.nlParser.once(`nlres:${nlId}`, function (nlCmd) {
-          platform.log('SLF once read data:', nlCmd);
-          if (nlCmd.isError()) {
-            callback(new Error('Error on write: ' + nlCmd));
-            return;
-          }
-          callback();
-        });
+    switch (typeof service) {
+      case this.platform.Service.Lightbulb:
+        service.getCharacteristic(this.platform.Characteristic.On)
+        return true;
+      default:
+        return false;
+    }
+  }
 
-        platform.serialPort.write(command.toBytes(), null, function (err) {
-          if (err) {
-            platform.log('Error on write: ', err.message);
-            callback(new Error('Error on write: ' + err.message));
-            return;
-          }
-          platform.log('message written: ', command);
-        });
-      })
-      .on('get', function(callback) {
-        let acc = this;
+  setCharacteristicsCallbacks(accessory) {
+    accessory.getService('Lightbulb').getCharacteristic('On')
+      .on('set', this.setOnState.bind(this))
+      .on('get', this.getOnState.bind(this));
+  }
 
-        platform.log(accessoryName, "get value");
+  getOnState(callback) {
+    this.log(accessoryName, "get value");
 
-        let command = new NooLiteRequest(
-          nlChannel,
-          128,
-          2,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          ...nlId.split(':')
-        );
+    this.platform.serialPort.nlParser.once(`nlres:${nlId}`, (nlCmd) => {
+      this.log('once read data in GET callback:', nlCmd);
+      if (nlCmd.isError()) {
+        callback(new Error('Error on write: ' + nlCmd));
+        return;
+      }
 
-        platform.serialPort.nlParser.once(`nlres:${nlId}`, function (nlCmd) {
-          platform.log('SLF once read data:', nlCmd);
-          if (nlCmd.isError()) {
-            callback(new Error('Error on write: ' + nlCmd));
-            return;
-          }
+      let onValue = acc.value;
 
-          let onValue = acc.value;
+      if (nlCmd.isState() && nlCmd.fmt === 0) {
+        onValue = nlCmd.d2 > 0;
+      }
 
-          if (nlCmd.isState() && nlCmd.fmt === 0) {
-            onValue = nlCmd.d2 > 0;
-          }
+      callback(null, onValue);
+    });
 
-          callback(null, onValue);
-        });
+    let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
-        platform.serialPort.write(command.toBytes(), null, function (err) {
-          if (err) {
-            return platform.log('Error on write: ', err.message);
-          }
-          platform.log('message written');
-        });
-      });
+    this.platform.serialPort.write(command.toBytes(), null, (err) => {
+      if (err) {
+        return this.log('Error on write: ', err.message);
+      }
+      this.log('message written in GET callback', command);
+    });
+  }
+
+  setOnState(value, callback) {
+    this.log(accessoryName, "Set On characteristic to " + value);
+
+    this.platform.serialPort.nlParser.once(`nlres:${nlId}`, (nlCmd) => {
+      this.log('once read data in SET callback:', nlCmd);
+      if (nlCmd.isError()) {
+        callback(new Error('Error on write: ' + nlCmd));
+        return;
+      }
+      callback();
+    });
+
+    let command = new NooLiteRequest(this.nlChannel, (value ? 2 : 0), 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
+
+    this.platform.serialPort.write(command.toBytes(), null, (err) => {
+      if (err) {
+        this.log('Error on write: ', err.message);
+        callback(new Error('Error on write: ' + err.message));
+        return;
+      }
+      this.log('message written in SET callback: ', command);
+    });
   }
 
   getAccessoryInformation() {
