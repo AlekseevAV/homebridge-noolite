@@ -10,12 +10,21 @@ class Slf extends AccessoryBase {
     return 'блок с протоколом nooLite-F';
   }
 
-  init() {
-    super.init();
+  static getAccessoryCategory() {
+    return 5;
+  }
 
+  initOrCreateServices() {
+    super.initOrCreateServices();
+
+    let onCharacteristic = this.getOrCreateService(this.platform.Service.Lightbulb).getCharacteristic(this.platform.Characteristic.On);
+    onCharacteristic
+      .on('set', this.setOnState.bind(this))
+      .on('get', this.getOnState.bind(this));
+    
     // Обработка поступивших команд от MTRF
-    this.platform.serialPort.nlParser.on(`nlres:${nlId}`, (nlCmd) => {
-      this.log('read data by ID:', nlCmd);
+    this.platform.serialPort.nlParser.on(`nlres:${this.nlId}`, (nlCmd) => {
+      this.log('read data by ID: \n', nlCmd);
       if (nlCmd.isState() && nlCmd.fmt === 0) {
         // fmt 0 - Информация о силовом блоке
         // d0 - Код типа устройства
@@ -29,41 +38,17 @@ class Slf extends AccessoryBase {
         let onValue = nlCmd.d2 > 0;
 
         if (onCharacteristic.value !== onValue) {
-            onCharacteristic.setValue(onValue);
+            onCharacteristic.updateValue(onValue);
         }
       }
     });
   }
 
-  getServices() {
-    this.log('getting services')
-    let result = super.getServices();
-    let service = new this.platform.Service.Lightbulb(this.accessoryName);
-    result.push(service);
-  }
-
-  setCharacteristicsForService(service) {
-    if (super.setCharacteristicForService(service)) return;
-
-    switch (typeof service) {
-      case this.platform.Service.Lightbulb:
-        service.getCharacteristic(this.platform.Characteristic.On)
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  setCharacteristicsCallbacks(accessory) {
-    accessory.getService('Lightbulb').getCharacteristic('On')
-      .on('set', this.setOnState.bind(this))
-      .on('get', this.getOnState.bind(this));
-  }
-
   getOnState(callback) {
-    this.log(accessoryName, "get value");
+    this.log("get value");
+    let acc = this.accessory;
 
-    this.platform.serialPort.nlParser.once(`nlres:${nlId}`, (nlCmd) => {
+    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, (nlCmd) => {
       this.log('once read data in GET callback:', nlCmd);
       if (nlCmd.isError()) {
         callback(new Error('Error on write: ' + nlCmd));
@@ -90,9 +75,9 @@ class Slf extends AccessoryBase {
   }
 
   setOnState(value, callback) {
-    this.log(accessoryName, "Set On characteristic to " + value);
+    this.log("Set On characteristic to " + value);
 
-    this.platform.serialPort.nlParser.once(`nlres:${nlId}`, (nlCmd) => {
+    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, (nlCmd) => {
       this.log('once read data in SET callback:', nlCmd);
       if (nlCmd.isError()) {
         callback(new Error('Error on write: ' + nlCmd));

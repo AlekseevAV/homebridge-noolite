@@ -92,7 +92,7 @@ class NooLitePlatform {
 
 
     serialPort.nlParser.on('nlres', function (nlCommand) {
-      platform.log('NooLite command:', nlCommand);
+      platform.log.debug('NooLite command:', nlCommand);
     });
 
     serialPort.on('error', function(err) {
@@ -127,7 +127,7 @@ class NooLitePlatform {
     this.log(accessory.displayName, "Configure Accessory");
 
     if(this.AccessoryUtil) {
-        this.AccessoryUtil.add(accessory);
+        this.AccessoryUtil.initAccessory(accessory);
     }
 
     // Set the accessory to reachable if plugin can currently process the accessory,
@@ -235,11 +235,14 @@ class NooLitePlatform {
   addAccessory(accessoryName, nlType, nlChannel, nlid) {
     this.log(`Add Accessory: ${accessoryName} ${nlType} ${nlChannel} ${nlid}`);
 
-    let newAccessory = this.AccessoryUtil.add(accessoryName, nlType, nlChannel, nlid);
+    let {created, accessory} = this.AccessoryUtil.getOrCreateAccessory(accessoryName, nlType, nlChannel, nlid);
 
-    this.accessories.push(newAccessory);
-    this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [newAccessory]);
-    return newAccessory;
+    if (created) {
+      this.accessories.push(accessory);
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+    }
+
+    return accessory;
   }
 
   updateAccessoriesReachability() {

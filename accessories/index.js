@@ -60,10 +60,7 @@ class AccessoryUtil {
         return null;
     }
 
-    getAccessoryClass(accessory) {
-        let nlType = accessory.getService(this.platform.Service.NooLiteService)
-            .getCharacteristic(this.platform.Characteristic.NooLiteType).value;
-
+    getAccessoryClass(nlType) {
         if (nlType in availableAccessories) {
             return availableAccessories[nlType];
         } else {
@@ -73,29 +70,37 @@ class AccessoryUtil {
     }
 
     initAccessory(accessory) {
-        let nlType = accessory.getService(this.platform.Service.NooLiteService)
-            .getCharacteristic(this.platform.Characteristic.NooLiteType).value;
-        let accessoryName = nlService.getCharacteristic(platform.Characteristic.Name).value;
-        let nlChannel = nlService.getCharacteristic(platform.Characteristic.NooLiteChannel).value;
-        let nlId = nlService.getCharacteristic(platform.Characteristic.NooLiteId).value;
+        let accTypeClass = this.getAccessoryClass(accessory.context.NooLite.type);
+        if (accTypeClass)
+            new accTypeClass(this.platform, accessory);
+        return accessory;
+    }
 
-        return new availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
+    getOrCreateAccessory(accessoryName, nlType, nlChannel, nlId) {
+        let accUUID = this.getAccessoryUUID(nlChannel, nlType, nlId);
+
+        let existAccessory = this.getByUUID(accUUID);
+        if (existAccessory) {
+            return {created: false, accessory: existAccessory};
+        }
+        
+        let newAccessory = this.add(accessoryName, nlType, nlChannel, nlId);
+        return {created: true, accessory: newAccessory};
     }
 
     add(accessoryName, nlType, nlChannel, nlId) {
-        if (!(nlType in availableAccessories)) {
-            console.log('Unknown noolite type: ' + nlType);
-            return;
-        }
+        let accTypeClass = this.getAccessoryClass(nlType);
+        if (!accTypeClass) return;
 
         let accUUID = this.getAccessoryUUID(nlChannel, nlType, nlId);
-        let existAccessory = this.getByUUID(accUUID);
-        if (existAccessory !== null) {
-            return existAccessory;
+        let accessory = new this.platform.PlatformAccessory(accessoryName, accUUID, accTypeClass.getAccessoryCategory());
+        accessory.context['NooLite'] = {
+            type: nlType,
+            channel: nlChannel,
+            id: nlId
         }
-
-        availableAccessories[nlType](this.platform, accessoryName, nlType, nlChannel, nlId);
-        return new this.platform.PlatformAccessory(this.accessoryName, uuid, this.getAccessoryCategory());
+        new accTypeClass(this.platform, accessory);
+        return accessory;
     }
 }
 

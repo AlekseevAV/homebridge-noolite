@@ -2,13 +2,13 @@ class AccessoryBase {
   static displayName() {}
   static description() {}
 
-  constructor(platform, accessory, accessoryName, nlType, nlChannel, nlId) {
+  constructor(platform, accessory) {
     this.platform = platform;
     this.accessory = accessory;
-    this.accessoryName = accessoryName || accessory.getService('NooLiteService').getCharacteristic('Name').value;
-    this.nlType = nlType || accessory.getService('NooLiteService').getCharacteristic('nlType').value;
-    this.nlChannel = nlChannel || accessory.getService('NooLiteService').getCharacteristic('nlChannel').value;
-    this.nlId = nlId || accessory.getService('NooLiteService').getCharacteristic('nlId').value;
+    this.accessoryName = accessory.displayName;
+    this.nlType = accessory.context.NooLite.type;
+    this.nlChannel = accessory.context.NooLite.channel;
+    this.nlId = accessory.context.NooLite.id;
 
     return this.init();
   }
@@ -22,46 +22,30 @@ class AccessoryBase {
     return {};
   }
 
-  getAccessoryCategory() {
+  static getAccessoryCategory() {
     return null;
   }
 
-  getServices() {
-    let result = [];
-
-    let nlService = new this.platform.Service.NooLiteService(this.accessoryName);
-      
-    result.push(nlService);
-
-    return result;
+  initOrCreateServices() {
+    // Accessory Information
+    let accessoryInformation = this.getAccessoryInformation();
+    this.getOrCreateService(this.platform.Service.AccessoryInformation)
+      .setCharacteristic(this.platform.Characteristic.Manufacturer, accessoryInformation['Manufacturer'] || 'NooLite')
+      .setCharacteristic(this.platform.Characteristic.Model, accessoryInformation['Model'] || 'Undefined')
+      .setCharacteristic(this.platform.Characteristic.SerialNumber, accessoryInformation['SerialNumber'] || 'Undefined');
   }
 
-  setCharacteristicForService(service) {
-    switch(typeof service) {
-      case this.platform.Service.NooLiteService:
-        service
-          .setCharacteristic(this.platform.Characteristic.NooLiteType, this.nlType)
-          .setCharacteristic(this.platform.Characteristic.NooLiteChannel, this.nlChannel)
-          .setCharacteristic(this.platform.Characteristic.NooLiteId, this.nlId);
-      case this.platform.Service.AccessoryInformation:
-        let accessoryInformation = this.getAccessoryInformation();
-        service
-          .setCharacteristic(this.platform.Characteristic.Manufacturer, accessoryInformation['Manufacturer'] || "Undefined")
-          .setCharacteristic(this.platform.Characteristic.Model, accessoryInformation['Model'] || "Undefined")
-          .setCharacteristic(this.platform.Characteristic.SerialNumber, accessoryInformation['SerialNumber'] || "Undefined");
-        return true;
+  getOrCreateService(service) {
+    let accService = this.accessory.getService(service);
+    if (!accService) {
+      accService = this.accessory.addService(service);
     }
+    return accService;
   }
 
-  initAccessory(a) {
-    if (this.accessory)
-      let servicesList = this.accessory.services
-    else
-      let servicesList = this.getServices()
-    
-    for (let service of servicesList) {
-      this.setCharacteristicForService(service);
-    }
+  init() {
+    // Инициализируем или создаем сервисы аксессуара
+    this.initOrCreateServices();
   }
 }
 
