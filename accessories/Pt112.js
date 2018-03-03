@@ -19,7 +19,7 @@ class Pt112 extends AccessoryBase {
 
     let service = this.getOrCreateService(this.platform.Service.TemperatureSensor);
     let currentTemperature = service.getCharacteristic(this.platform.Characteristic.CurrentTemperature);
-    let lowBattery = service.addCharacteristic(this.platform.Characteristic.StatusLowBattery);
+    let lowBattery = service.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
     
     // Обработка поступивших команд от MTRF
     this.platform.serialPort.nlParser.on(`nlres:${this.nlChannel}`, (nlCmd) => {

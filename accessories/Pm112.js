@@ -19,7 +19,7 @@ class Pm112 extends AccessoryBase {
 
     let service = this.getOrCreateService(this.platform.Service.MotionSensor);
     let motionDetected = service.getCharacteristic(this.platform.Characteristic.MotionDetected);
-    let lowBattery = service.addCharacteristic(this.platform.Characteristic.StatusLowBattery);
+    let lowBattery = service.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
     
     // Обработка поступивших команд от MTRF
     this.platform.serialPort.nlParser.on(`nlres:${this.nlChannel}`, (nlCmd) => {

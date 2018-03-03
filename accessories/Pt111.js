@@ -19,11 +19,11 @@ class Pt111 extends AccessoryBase {
 
     let tempService = this.getOrCreateService(this.platform.Service.TemperatureSensor);
     let currentTemperature = tempService.getCharacteristic(this.platform.Characteristic.CurrentTemperature);
-    let tempLowBattery = tempService.addCharacteristic(this.platform.Characteristic.StatusLowBattery);
+    let tempLowBattery = tempService.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
 
     let humService = this.getOrCreateService(this.platform.Service.HumiditySensor);
     let currentHum = humService.getCharacteristic(this.platform.Characteristic.CurrentRelativeHumidity);
-    let humLowBattery = humService.addCharacteristic(this.platform.Characteristic.StatusLowBattery);
+    let humLowBattery = humService.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
 
     
     // Обработка поступивших команд от MTRF
