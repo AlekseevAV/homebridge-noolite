@@ -63,15 +63,14 @@ class Sd extends AccessoryBase {
     brightness
       .on('set', (value, callback) => {
         this.log("Set brightness characteristic to " + value);
-        let rgbValues = this.hsvToRgb(hue.value, 100, value);
+        let rgbValues = this.hsvToRgb(hue.value, saturation.value, value);
         setRGBValues(rgbValues, callback);
       });
     
     hue
       .on('set', (value, callback) => {
         this.log("Set Hue characteristic to " + value);
-        this.log("Set brightness characteristic to " + value);
-        let rgbValues = this.hsvToRgb(value, 100, brightness.value);
+        let rgbValues = this.hsvToRgb(value, saturation.value, brightness.value);
         setRGBValues(rgbValues, callback);
       });
     
