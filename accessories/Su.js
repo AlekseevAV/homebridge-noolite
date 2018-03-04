@@ -7,7 +7,7 @@ class Su extends AccessoryBase {
     return 'SU';
   }
   static description() {
-    return 'блок со старым протоколом nooLite';
+    return 'диммируемый блок со старым протоколом nooLite';
   }
 
   static getAccessoryCategory() {
@@ -17,10 +17,44 @@ class Su extends AccessoryBase {
   initOrCreateServices() {
     super.initOrCreateServices();
 
-    let onCharacteristic = this.getOrCreateService(this.platform.Service.Switch).getCharacteristic(this.platform.Characteristic.On);
+    let lightbulb = this.getOrCreateService(this.platform.Service.Lightbulb);
+    let onCharacteristic = lightbulb.getCharacteristic(this.platform.Characteristic.On);
+    let brightness = lightbulb.getCharacteristic(this.platform.Characteristic.Brightness);
+
     onCharacteristic
-      .on('set', this.setOnState.bind(this))
-    
+      .on('set', (value, callback) => {
+        this.log("Set On characteristic to " + value);
+
+        let command = new NooLiteRequest(this.nlChannel, (value ? 2 : 0), 0);
+
+        this.platform.serialPort.write(command.toBytes(), null, (err) => {
+          if (err) {
+            this.log('Error on write: ', err.message);
+            callback(new Error('Error on write: ' + err.message));
+            return;
+          }
+          this.log('message written in SET callback: ', command);
+          callback();
+        });
+      });
+
+    brightness
+      .on('set', (value, callback) => {
+        this.log("Set brightness characteristic to " + value);
+
+        let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 1, 28 + Math.ceil(125 / 100 * value));
+
+        this.platform.serialPort.write(command.toBytes(), null, (err) => {
+          if (err) {
+            this.log('Error on write: ', err.message);
+            callback(new Error('Error on write: ' + err.message));
+            return;
+          }
+          this.log('message written in SET callback: ', command);
+          callback();
+        });
+      });
+
     // Обработка поступивших команд от MTRF
     this.platform.serialPort.nlParser.on(`nlres:${this.nlChannel}`, (nlCmd) => {
       this.log('read data by CHANNEL: ', nlCmd);
@@ -37,23 +71,10 @@ class Su extends AccessoryBase {
         case 2:
           onCharacteristic.updateValue(1);
           break;
+        case 6:
+          brightness.updateValue(Math.ceil(nlCmd.d0 / (255 / 100)));
+          break;
       }
-    });
-  }
-
-  setOnState(value, callback) {
-    this.log("Set On characteristic to " + value);
-
-    let command = new NooLiteRequest(this.nlChannel, (value ? 2 : 0), 0);
-
-    this.platform.serialPort.write(command.toBytes(), null, (err) => {
-      if (err) {
-        this.log('Error on write: ', err.message);
-        callback(new Error('Error on write: ' + err.message));
-        return;
-      }
-      this.log('message written in SET callback: ', command);
-      callback();
     });
   }
 

@@ -1,0 +1,16 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:92",
+    "port": 51826,
+    "pin": "111-11-111"
+  },
+  "description": "This is an example configuration file with NooLite platform plugin.",
+  "accessories": [],
+  "platforms": [
+    {
+      "platform": "NooLitePlatform",
+      "serialPort": "/dev/tty.usbserial-AL032Z5U"
+    }
+  ]
+}
