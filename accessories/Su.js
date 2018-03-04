@@ -11,7 +11,7 @@ class Su extends AccessoryBase {
   }
 
   static getAccessoryCategory() {
-    return 8;
+    return 5;
   }
 
   initOrCreateServices() {
