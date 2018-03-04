@@ -119,6 +119,10 @@ $('form[name="create-hk-acc"]').each(function () {
   });
 });
 
+$('#nl-type-select').on('change', function() {
+  $('#nl-type-select-description').html(this.selectedOptions[0].dataset.description);
+});
+
 setTimeout(() => {
     discoverAccs(currentChannel);
     updateHomeKitAccs();

@@ -32,7 +32,7 @@ module.exports = function (nooLitePlatform) {
     for (let typeCode in nooLitePlatform.AccessoryUtil.availableAccessories) {
       if(nooLitePlatform.AccessoryUtil.availableAccessories.hasOwnProperty(typeCode)) {
         let type = nooLitePlatform.AccessoryUtil.availableAccessories[typeCode];
-        availableAccTypes.push({code: typeCode, name: `${type.displayName()} ${type.description()}`});
+        availableAccTypes.push({code: typeCode, name: type.displayName(), description: type.description()});
       }
     }
 

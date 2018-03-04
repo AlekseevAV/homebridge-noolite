@@ -85,11 +85,12 @@
             </div>
             <div class="form-group">
               <label>Тип</label>
-              <select name="type" required class="form-control">
+              <select id="nl-type-select" name="type" required class="form-control">
                 {% for type in accTypes %}
-                  <option value="{{ type.code }}">{{ type.name }}</option>
+                  <option data-description="{{ type.description }}" value="{{ type.code }}">{{ type.name }}</option>
                 {% endfor %}
               </select>
+              <small id="nl-type-select-description" class="form-text text-muted">{{ accTypes[0].description }}</small>
             </div>
             <div class="form-group">
               <label>Канал</label>
