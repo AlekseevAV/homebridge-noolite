@@ -27,6 +27,13 @@ module.exports = function (homebridge) {
 
 class NooLitePlatform {
   constructor(log, config, api) {
+
+    if (!config) {
+        log.warn("Ignoring NooLite Platform setup because it is not configured");
+        this.disabled = true;
+        return;
+    }
+
     log("NooLitePlatform v.", pjson.version);
     let platform = this;
 
