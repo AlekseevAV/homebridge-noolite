@@ -41,14 +41,24 @@ There are 2 sections оn accessories page (`/acc`):
 
 ## NooLite supported accessories
 
+Blocks:
 1. [SLF](https://www.noo.com.by/slf-1-300.html) block with NooLite-F protocol
-3. [SU](https://www.noo.com.by/silovoj-blok-sb111-150.html) block
-4. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB led strip block
+2. [SU](https://www.noo.com.by/su111-200.html) block
+3. [SB](https://www.noo.com.by/silovoj-blok-sb111-150.html) block
+4. [SR](https://www.noo.com.by/silovoj-blok-sr211-2k0.html) block
+5. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB led strip block
 
+Sensors:
+1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
+2. Temperature sensor [PT112](https://www.noo.com.by/pt112.html)
+3. Temperature and humidity sensor [PT111](https://www.noo.com.by/pt111.html)
 
+Custom accessories:
+1. Garage Door accessory - based on SLF block, send 8 command (Power On by 1.5 seconds) to block on Open/Close action.
+   Default setting is the interval of 20 seconds for the complete opening/closing of the door.
 
-3. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
-4. Temperature sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
-5. Temperature sensor [PT112](https://www.noo.com.by/pt112.html)
-6. Temperature and humidity sensor [PT111](https://www.noo.com.by/pt112.html)
-
+### TODO:
+1. SLF configuration improvements
+2. [SRF](https://www.noo.com.by/srf-10-1000.html) blocks
+3. [SUF](https://www.noo.com.by/silovoj-blok-suf-1-300.html) blocks
+4. Web interface UI/UX
