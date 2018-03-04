@@ -41,19 +41,19 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 
 ## Поддерживаемые NooLite устройства
 
-Силовые блоки:
+#### Силовые блоки:
 1. [SLF](https://www.noo.com.by/slf-1-300.html) блок с протоколом NooLite-F
 2. [SU](https://www.noo.com.by/su111-200.html) блок
 3. [SB](https://www.noo.com.by/silovoj-blok-sb111-150.html) блок
 4. [SR](https://www.noo.com.by/silovoj-blok-sr211-2k0.html) блок
 5. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB контроллер
 
-Датчики:
+#### Датчики:
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
 2. Датчик температуры [PT112](https://www.noo.com.by/pt112.html)
 3. Датчик температуры и влажности [PT111](https://www.noo.com.by/pt111.html)
 
-Специфические аксессуары:
+#### Специфические аксессуары:
 1. Акссессуар гаражной двери - сделан на базе SLF блока, отсылает команду 8 (включает нагрузку на 1.5 секунды) по событиям Открыть/Закрыть.
    По умолчанию установлен интервал в 20 секунд на полное открытие/закрытие двери.
 
