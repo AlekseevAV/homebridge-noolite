@@ -9,7 +9,7 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 1. Установить [homebridge](https://github.com/nfarina/homebridge)
 2. Установить homebridge-noolite плагин 
 
-        $ npm install homebridge-noolite
+        $  sudo npm install -g --unsafe-perm homebridge-noolite
    
 3. Добавить необходимые настройки homebridge в config.json
 
@@ -22,8 +22,7 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
           ]
         ...
  
-    Можно использовать `serialport-list` команду для получения списка доступных последовательных портов. Нужно указать путь до последовательного порта MTRF адапетра.
-    Смотри файл `sampleConfig.json` для примера.
+    `serialPort` - путь до последовательного порта MTRF адапетра. Смотри файл `sampleConfig.json` для примера.
 
 4. Запустить homebridge
 

@@ -9,7 +9,7 @@ Read this in other languages: [Русский](https://github.com/AlekseevAV/hom
 1. Install [homebridge](https://github.com/nfarina/homebridge)
 2. Install homebridge-noolite plugin 
 
-        $ npm install homebridge-noolite
+        $ sudo npm install -g --unsafe-perm homebridge-noolite
    
 3. Add settings to homebridge config.json
 
@@ -22,8 +22,7 @@ Read this in other languages: [Русский](https://github.com/AlekseevAV/hom
           ]
         ...
  
-    Use `serialport-list` command to get list of available serial ports. There should be path to MTRF-64 serial port.
-    See `sampleConfig.json` file for example.
+    `serialPort` - path to MTRF-64 serial port. See `sampleConfig.json` file for example.
 
 4. Run homebridge
 
