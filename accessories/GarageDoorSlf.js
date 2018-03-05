@@ -23,9 +23,6 @@ class GarageDoorSlf extends AccessoryBase {
     let targetState = garageDoor.getCharacteristic(this.platform.Characteristic.TargetDoorState);
     let timeToOpenClose = garageDoor.getCharacteristic(this.platform.Characteristic.TimeToOpenClose);
 
-    // TimeToOpenClose default as 20 seconds
-    garageDoor.setCharacteristic(this.platform.Characteristic.TimeToOpenClose, 20);
-
     targetState
       .on('set', (value, callback) => {
         this.log("Set targetState characteristic to " + value);
