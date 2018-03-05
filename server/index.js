@@ -19,6 +19,9 @@ nunjucks.configure(path.join(__dirname, '/templates'), {
 });
 
 module.exports = function (nooLitePlatform) {
+  // Set commot templates vars
+  app.locals.pkgVersion = nooLitePlatform.pjson.version;
+
   app.get('/', function (req, res) {
     res.render('request_manager', {
       url: req.originalUrl,
@@ -38,7 +41,7 @@ module.exports = function (nooLitePlatform) {
 
     res.render('acc', {
       url: req.originalUrl,
-      title: 'NooLite - Запросы',
+      title: 'NooLite - аксессуары',
       channels: [...Array(64).keys()],
       accTypes: availableAccTypes
     });

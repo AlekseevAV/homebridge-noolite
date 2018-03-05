@@ -35,6 +35,7 @@ class NooLitePlatform {
     }
 
     log("NooLitePlatform v.", pjson.version);
+    this.pjson = pjson;
     let platform = this;
 
     // Get settings from config
