@@ -1,6 +1,7 @@
 const availableAccessories = {
     'slf': require('./Slf'),
     'su': require('./Su'),
+    'suSwitch': require('./SuSwitch'),
     'sb': require('./Sb'),
     'sr': require('./Sr'),
     'pt112': require('./Pt112'),
