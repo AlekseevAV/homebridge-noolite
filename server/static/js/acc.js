@@ -1,7 +1,11 @@
 let currentChannel = 0;
 
-let addAcc = (channel) => {
-    $.post(`/api/channels/${channel}/acc`);
+let sendCommandToChannel = (channel, cmd, mode=0, ctr=0, res=0, fmt=0, d0=0, d1=0, d2=0, d3=0, id0=0, id1=0, id2=0, id3=0) => {
+    $.post(`/api/channels/${channel}/`, {cmd, mode, ctr, res, fmt, d0, d1, d2, d3, id0, id1, id2, id3});
+};
+
+let addAcc = (channel, mode=2) => {
+    $.post(`/api/channels/${channel}/acc`, {mode: mode});
 };
 
 let deleteAllAccs = (channel) => {

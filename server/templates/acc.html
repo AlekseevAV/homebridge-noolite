@@ -19,9 +19,12 @@
               </div>
             </div>
             <div class="col-md-2">
-              <button class="btn btn-primary btn-block" onclick="discoverAccs(currentChannel)">Опросить</button>
-              <button class="btn btn-primary btn-block" onclick="addAcc(currentChannel)">Привязать</button>
-              <button class="btn btn-primary btn-block" onclick="deleteAllAccs(currentChannel)">Очистить канал</button>
+              <button class="btn btn-outline-primary btn-block btn-sm" onclick="discoverAccs(currentChannel)">Опросить</button>
+              <button class="btn btn-outline-primary btn-block btn-sm" onclick="addAcc(currentChannel)">Привязать NooLite-F</button>
+              <button class="btn btn-outline-primary btn-block btn-sm" onclick="addAcc(currentChannel, 0)">Привязать</button>
+              <button class="btn btn-outline-primary btn-block btn-sm" onclick="sendCommandToChannel(currentChannel, 0, 1, 3)">Включить режим привязки датчиков</button>
+              <button class="btn btn-outline-primary btn-block btn-sm" onclick="sendCommandToChannel(currentChannel, 0, 1, 4)">Выключить режим привязки датчиков</button>
+              <button class="btn btn-outline-danger btn-block btn-sm" onclick="deleteAllAccs(currentChannel)">Очистить канал</button>
             </div>
             <div class="col">
               <div class="card h-100">
@@ -79,28 +82,34 @@
         <div class="card-header">HomeKit создание аксессуара</div>
         <div class="card-body">
           <form action="post" name="create-hk-acc">
-            <div class="form-group">
-              <label>Имя</label>
-              <input name="name" required type="text" class="form-control" placeholder="Свет на кухне">
+            <div class="row">
+              <div class="form-group col">
+                <label>Имя</label>
+                <input name="name" required type="text" class="form-control" placeholder="Свет на кухне">
+              </div>
+              <div class="form-group col">
+                <label>Тип</label>
+                <select id="nl-type-select" name="type" required class="form-control">
+                  {% for type in accTypes %}
+                    <option data-description="{{ type.description }}" value="{{ type.code }}">{{ type.name }}</option>
+                  {% endfor %}
+                </select>
+                <small id="nl-type-select-description" class="form-text text-muted">{{ accTypes[0].description }}</small>
+              </div>
             </div>
-            <div class="form-group">
-              <label>Тип</label>
-              <select id="nl-type-select" name="type" required class="form-control">
-                {% for type in accTypes %}
-                  <option data-description="{{ type.description }}" value="{{ type.code }}">{{ type.name }}</option>
-                {% endfor %}
-              </select>
-              <small id="nl-type-select-description" class="form-text text-muted">{{ accTypes[0].description }}</small>
+
+            <div class="row">
+              <div class="form-group col">
+                <label>Канал</label>
+                <input name="channel" required type="number" min="0" max="63" class="form-control" placeholder="1">
+              </div>
+              <div class="form-group col">
+                <label>Id</label>
+                <input name="id" type="text" maxlength="15" class="form-control" placeholder="00:00:02:112">
+                <small class="form-text text-muted">Если есть</small>
+              </div>
             </div>
-            <div class="form-group">
-              <label>Канал</label>
-              <input name="channel" required type="number" min="0" max="63" class="form-control" placeholder="1">
-            </div>
-            <div class="form-group">
-              <label>Id</label>
-              <input name="id" type="text" maxlength="15" class="form-control" placeholder="00:00:02:112">
-              <small class="form-text text-muted">Если есть</small>
-            </div>
+
             <button type="submit" class="btn btn-primary">Создать</button>
           </form>
         </div>

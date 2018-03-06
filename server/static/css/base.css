@@ -37,6 +37,9 @@
     background: #eae7f7;
 }
 
+.btn {
+    white-space: normal;
+}
 
 .console {
     font-family: Courier;

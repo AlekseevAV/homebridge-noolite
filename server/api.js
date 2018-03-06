@@ -58,6 +58,27 @@ module.exports = function(nooLitePlatform){
 
   // NooLite канал
   router.route('/channels/:ch/')
+    // Отправить команду на канал
+    .post((req, res) => {
+      let command = new NooLiteRequest(
+        req.params.ch,
+        req.body.cmd || 0,
+        req.body.mode || 2,
+        req.body.ctr || 0,
+        req.body.res || 0,
+        req.body.fmt || 0,
+        req.body.d0 || 0,
+        req.body.d1 || 0,
+        req.body.d2 || 0,
+        req.body.d3 || 0,
+        req.body.id0 || 0,
+        req.body.id1 || 0,
+        req.body.id2 || 0,
+        req.body.id3 || 0
+      );
+      nooLitePlatform.sendCommand(command);
+      res.json({status: 'ok'});
+    })
     // Очистить канал
     .delete((req, res) => {
       nooLitePlatform.sendCommand(new NooLiteRequest(req.params.ch, 0, 2, 5));
@@ -68,7 +89,7 @@ module.exports = function(nooLitePlatform){
   router.route('/channels/:ch/acc/')
     // Привязать устройство
     .post((req, res) => {
-      nooLitePlatform.sendCommand(new NooLiteRequest(req.params.ch, 15, 2));
+      nooLitePlatform.sendCommand(new NooLiteRequest(req.params.ch, 15, req.query.mode));
       res.json({status: 'ok'});
     })
     // Получить состояние
