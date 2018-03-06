@@ -50,21 +50,6 @@ module.exports = function (nooLitePlatform) {
   // Add api endpoints to server
   app.use('/api', apiRouter(nooLitePlatform));
 
-  app.get('/add', function (req, res) {
-    nooLitePlatform.addAccessory('test', 'slf', 0, '00:00:02:112');
-    res.end();
-  });
-
-  app.get('/reachability', function (req, res) {
-    nooLitePlatform.updateAccessoriesReachability();
-    res.end();
-  });
-
-  app.get('/remove', function (req, res) {
-    nooLitePlatform.removeAccessory();
-    res.end();
-  });
-
   // NooLite raw API implementation
   app.get('/api.htm', function (req, res) {
     let command = new NooLiteRequest(

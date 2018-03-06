@@ -266,14 +266,11 @@ class NooLitePlatform {
 
     let acc = this.AccessoryUtil.getByUUID(UUID);
     if (acc) {
-        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [acc]);
-        let accIndex = this.accessories.indexOf(acc);
-        if (accIndex > -1) {
-            this.accessories.splice(accIndex, 1);
-        }
-    } else {
-      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.accessories);
-      this.accessories = [];
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [acc]);
+      let accIndex = this.accessories.indexOf(acc);
+      if (accIndex > -1) {
+          this.accessories.splice(accIndex, 1);
+      }
     }
   }
 
