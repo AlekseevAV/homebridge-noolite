@@ -89,7 +89,7 @@ module.exports = function(nooLitePlatform){
   router.route('/channels/:ch/acc/')
     // Привязать устройство
     .post((req, res) => {
-      nooLitePlatform.sendCommand(new NooLiteRequest(req.params.ch, 15, req.query.mode));
+      nooLitePlatform.sendCommand(new NooLiteRequest(req.params.ch, 15, req.body.mode));
       res.json({status: 'ok'});
     })
     // Получить состояние
