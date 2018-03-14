@@ -48,7 +48,8 @@ class Slf extends AccessoryBase {
     this.log("get value");
     let acc = this.accessory;
 
-    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, (nlCmd) => {
+    let nlRespListener = (nlCmd) => {
+      clearTimeout(responseTimer);
       this.log('once read data in GET callback:', nlCmd);
       if (nlCmd.isError()) {
         callback(new Error('Error on write: ' + nlCmd));
@@ -62,7 +63,9 @@ class Slf extends AccessoryBase {
       }
 
       callback(null, onValue);
-    });
+    };
+
+    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, nlRespListener);
 
     let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
@@ -72,6 +75,13 @@ class Slf extends AccessoryBase {
       }
       this.log('message written in GET callback', command);
     });
+
+    let responseTimer = setTimeout(() => {
+        this.log('Wating response timeout. Return cached state: ', acc.value);
+        this.platform.serialPort.nlParser.removeListener(`nlres:${this.nlId}`, nlRespListener);
+        callback(null, acc.value);
+    }, 1000);
+
   }
 
   setOnState(value, callback) {
