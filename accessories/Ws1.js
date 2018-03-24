@@ -32,10 +32,10 @@ class Ws1 extends AccessoryBase {
 
       switch (nlCmd.cmd) {
         case 0:
-          motionDetected.setValue(false);
+          leakDetected.setValue(false);
           break;
         case 2:
-          motionDetected.setValue(true);
+          leakDetected.setValue(true);
           break;
         case 20:
           lowBattery.setValue(true);
