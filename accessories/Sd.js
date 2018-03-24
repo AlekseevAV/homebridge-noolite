@@ -35,15 +35,19 @@ class Sd extends AccessoryBase {
 
         let command = new NooLiteRequest(this.nlChannel, (value ? 2 : 0), 0);
 
-        this.platform.serialPort.write(command.toBytes(), null, (err) => {
+        this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
             this.log('Error on write: ', err.message);
             callback(new Error('Error on write: ' + err.message));
             return;
+          } else if (nlRes.isError()) {
+            callback(new Error('Error on write: ' + nlRes));
+            return;
           }
-          this.log('message written in SET callback: ', command);
+
           callback();
-        });
+        })
+
       });
 
     let setRGBValues = (rgbValues, callback) => {
@@ -85,15 +89,19 @@ class Sd extends AccessoryBase {
 
         let command = new NooLiteRequest(this.nlChannel, (value ? 16 : 10), 0);
 
-        this.platform.serialPort.write(command.toBytes(), null, (err) => {
+        this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
             this.log('Error on write: ', err.message);
             callback(new Error('Error on write: ' + err.message));
             return;
+          } else if (nlRes.isError()) {
+            callback(new Error('Error on write: ' + nlRes));
+            return;
           }
-          this.log('message written in SET callback: ', command);
+
           callback();
-        });
+        })
+
       });
 
 
