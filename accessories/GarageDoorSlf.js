@@ -27,28 +27,24 @@ class GarageDoorSlf extends AccessoryBase {
       .on('set', (value, callback) => {
         this.log("Set targetState characteristic to " + value);
 
-        this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, (nlCmd) => {
-          this.log('once read data in SET callback:', nlCmd);
-          if (nlCmd.isError()) {
-            callback(new Error('Error on write: ' + nlCmd));
-            return;
-          }
-          callback();
-          setTimeout(() => {
-            currentState.setValue(value);
-          }, timeToOpenClose.value * 1000);
-        });
-
         let command = new NooLiteRequest(this.nlChannel, 8, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
-        this.platform.serialPort.write(command.toBytes(), null, (err) => {
+        this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
             this.log('Error on write: ', err.message);
             callback(new Error('Error on write: ' + err.message));
             return;
+          } else if (nlRes.isError()) {
+            callback(new Error('Error on write: ' + nlRes));
+            return;
           }
-          this.log('message written in SET callback: ', command);
-        });
+
+          callback();
+          setTimeout(() => {
+            currentState.setValue(value);
+          }, timeToOpenClose.value * 1000);
+        })
+
       });
   }
 

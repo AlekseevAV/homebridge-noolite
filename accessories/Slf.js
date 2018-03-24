@@ -48,11 +48,15 @@ class Slf extends AccessoryBase {
     this.log("get value");
     let acc = this.accessory;
 
-    let nlRespListener = (nlCmd) => {
-      clearTimeout(responseTimer);
-      this.log('once read data in GET callback:', nlCmd);
-      if (nlCmd.isError()) {
-        callback(new Error('Error on write: ' + nlCmd));
+    let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
+
+    this.platform.sendCommand(command, (err, nlRes) => {
+      if (err) {
+        this.log('Error on write: ', err.message);
+        callback(new Error('Error on write: ' + err.message));
+        return;
+      } else if (nlRes.isError()) {
+        callback(new Error('Error on write: ' + nlRes));
         return;
       }
 
@@ -63,49 +67,28 @@ class Slf extends AccessoryBase {
       }
 
       callback(null, onValue);
-    };
-
-    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, nlRespListener);
-
-    let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
-
-    this.platform.serialPort.write(command.toBytes(), null, (err) => {
-      if (err) {
-        return this.log('Error on write: ', err.message);
-      }
-      this.log('message written in GET callback', command);
-    });
-
-    let responseTimer = setTimeout(() => {
-        this.log('Wating response timeout. Return cached state: ', acc.value);
-        this.platform.serialPort.nlParser.removeListener(`nlres:${this.nlId}`, nlRespListener);
-        callback(null, acc.value);
-    }, 1000);
+    })
 
   }
 
   setOnState(value, callback) {
     this.log("Set On characteristic to " + value);
 
-    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, (nlCmd) => {
-      this.log('once read data in SET callback:', nlCmd);
-      if (nlCmd.isError()) {
-        callback(new Error('Error on write: ' + nlCmd));
-        return;
-      }
-      callback();
-    });
-
     let command = new NooLiteRequest(this.nlChannel, (value ? 2 : 0), 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
-    this.platform.serialPort.write(command.toBytes(), null, (err) => {
+    this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
         callback(new Error('Error on write: ' + err.message));
         return;
+      } else if (nlRes.isError()) {
+        callback(new Error('Error on write: ' + nlRes));
+        return;
       }
-      this.log('message written in SET callback: ', command);
-    });
+
+      callback();
+    })
+
   }
 
   getAccessoryInformation() {
