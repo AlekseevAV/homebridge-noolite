@@ -72,5 +72,31 @@ module.exports = function (nooLitePlatform) {
     res.json({status: 'ok'});
   });
 
+  app.get('/speedtest', (req, res) => {
+    let command = new NooLiteRequest(
+      req.query.ch || 0,
+      req.query.cmd || 0,
+      req.query.mode || 2,
+      req.query.ctr || 0,
+      req.query.res || 0,
+      req.query.fmt || 0,
+      req.query.d0 || 0,
+      req.query.d1 || 0,
+      req.query.d2 || 0,
+      req.query.d3 || 0,
+      req.query.id0 || 0,
+      req.query.id1 || 0,
+      req.query.id2 || 0,
+      req.query.id3 || 0
+    );
+
+    const commandsCount = parseInt(req.query.count) || 1
+
+    for (let i in [...Array(commandsCount).keys()]) {
+      nooLitePlatform.sendCommand(command);
+    }
+    res.json({status: 'ok'});
+  });
+
   return app;
 };
