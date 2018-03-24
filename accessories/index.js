@@ -8,6 +8,8 @@ const availableAccessories = {
     'pt112': require('./Pt112'),
     'pt111': require('./Pt111'),
     'pm112': require('./Pm112'),
+    'ws1': require('./Ws1'),
+    'ds1': require('./Ds1'),
     'sd': require('./Sd'),
     'garageDoorSlf': require('./GarageDoorSlf')
 };
