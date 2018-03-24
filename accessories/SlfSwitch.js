@@ -48,8 +48,6 @@ class SlfSwitch extends AccessoryBase {
     this.log("get value");
     let acc = this.accessory;
 
-    this.platform.serialPort.nlParser.once(`nlres:${this.nlId}`, nlRespListener);
-
     let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
     this.platform.sendCommand(command, (err, nlRes) => {
