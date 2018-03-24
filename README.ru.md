@@ -51,6 +51,8 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
 2. Датчик температуры [PT112](https://www.noo.com.by/pt112.html)
 3. Датчик температуры и влажности [PT111](https://www.noo.com.by/pt111.html)
+4. Датчик протечки [WS-1](https://www.noo.com.by/datchik-protechki-ws-1.html)
+5. Датчик открытия/закрытия [DS-1](https://www.noo.com.by/datchik-otkryitiyazakryitiya-ds-1.html)
 
 #### Специфические аксессуары:
 1. Акссессуар ворота - сделан на базе SLF блока, отсылает команду 8 (включает нагрузку на 1.5 секунды) по событиям Открыть/Закрыть.

@@ -51,6 +51,8 @@ There are 2 sections оn accessories page (`/acc`):
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
 2. Temperature sensor [PT112](https://www.noo.com.by/pt112.html)
 3. Temperature and humidity sensor [PT111](https://www.noo.com.by/pt111.html)
+4. Leak sensor [WS-1](https://www.noo.com.by/datchik-protechki-ws-1.html)
+5. Contact sensor [DS-1](https://www.noo.com.by/datchik-otkryitiyazakryitiya-ds-1.html)
 
 #### Custom accessories:
 1. Garage Door accessory - based on SLF block, send 8 command (Power On by 1.5 seconds) to block on Open/Close action.
