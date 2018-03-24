@@ -62,8 +62,8 @@ class Slf extends AccessoryBase {
 
       let onValue = acc.value;
 
-      if (nlCmd.isState() && nlCmd.fmt === 0) {
-        onValue = nlCmd.d2 > 0;
+      if (nlRes.isState() && nlRes.fmt === 0) {
+        onValue = nlRes.d2 > 0;
       }
 
       callback(null, onValue);
