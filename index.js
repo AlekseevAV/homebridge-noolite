@@ -107,7 +107,7 @@ class NooLitePlatform {
       platform.log.error('Serial port error: ', err)
     })
 
-    serialPort.mtrfSerial = new MTRFSerial(serialPort);
+    serialPort.mtrfSerial = new MTRFSerial(platform, serialPort);
 
     return serialPort;
   }
@@ -295,14 +295,14 @@ class NooLitePlatform {
     this.log.debug('Serail message to send: ', command);
     this.serialPort.mtrfSerial.send(command, (err, nlRes) => {
       if (err) {
-        return this.log('Error on write: ', err.message);
+        this.log.error('Error on write: ', err.message);
         if (callback) {
           callback(err)
         }
         return
       }
-      this.log('Request to MTRF: ', command);
-      this.log('Response from MTRF: ', nlRes);
+      this.log.debug('Request to MTRF: ', command);
+      this.log.debug('Response from MTRF: ', nlRes);
       
       if (callback) {
         callback(null, nlRes)
