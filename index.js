@@ -301,8 +301,8 @@ class NooLitePlatform {
         }
         return
       }
-      this.log.debug('Request to MTRF: ', command);
-      this.log.debug('Response from MTRF: ', nlRes);
+      this.log('Request to MTRF: ', command);
+      this.log('Response from MTRF: ', nlRes);
       
       if (callback) {
         callback(null, nlRes)

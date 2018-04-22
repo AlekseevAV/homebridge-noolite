@@ -29,7 +29,6 @@ class Su extends AccessoryBase {
 
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
-            this.log('Error on write: ', err.message);
             callback(new Error('Error on write: ' + err.message));
             return;
           } else if (nlRes.isError()) {
@@ -49,7 +48,6 @@ class Su extends AccessoryBase {
 
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
-            this.log('Error on write: ', err.message);
             callback(new Error('Error on write: ' + err.message));
             return;
           } else if (nlRes.isError()) {
