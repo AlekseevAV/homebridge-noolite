@@ -53,13 +53,16 @@ class Sd extends AccessoryBase {
     let setRGBValues = (rgbValues, callback) => {
       let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 3, rgbValues.r, rgbValues.g, rgbValues.b);
 
-      this.platform.serialPort.write(command.toBytes(), null, (err) => {
+      this.platform.sendCommand(command, (err, nlRes) => {
         if (err) {
           this.log('Error on write: ', err.message);
           callback(new Error('Error on write: ' + err.message));
           return;
+        } else if (nlRes.isError()) {
+          callback(new Error('Error on write: ' + nlRes));
+          return;
         }
-        this.log('message written in SET callback: ', command);
+
         callback();
       });
     };
