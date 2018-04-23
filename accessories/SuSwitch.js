@@ -29,10 +29,11 @@ class SuSwitch extends AccessoryBase {
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
             this.log('Error on write: ', err.message);
-            callback(new Error('Error on write: ' + err.message));
+            callback(new Error('Error on write'));
             return;
           } else if (nlRes.isError()) {
-            callback(new Error('Error on write: ' + nlRes));
+            this.log('Error on response: ', nlRes);
+            callback(new Error('Error on response'));
             return;
           }
 
