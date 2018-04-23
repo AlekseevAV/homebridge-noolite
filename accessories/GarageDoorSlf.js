@@ -46,6 +46,9 @@ class GarageDoorSlf extends AccessoryBase {
           }, timeToOpenClose.value * 1000);
         })
 
+      })
+      .on('get', (callback) => {
+        callback(null, targetState.value);
       });
   }
 
