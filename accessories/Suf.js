@@ -126,7 +126,12 @@ class Suf extends AccessoryBase {
       let brightnessValue = acc.value;
 
       if (nlRes.isState() && nlRes.fmt === 0) {
-        brightnessValue = Math.ceil(nlRes.d3 / (255 / 100));
+        brightnessValue = Math.ceil(nlRes.d3 / (128 / 100)) - 22;
+        if (hkBrightness > 100) {
+          brightnessValue = 100;
+        } else if (hkBrightness < 0) {
+          brightnessValue = 0;
+        }
       }
 
       callback(null, brightnessValue);
@@ -137,7 +142,7 @@ class Suf extends AccessoryBase {
   setBrightnessState(value, callback) {
     this.log("Set Brightness characteristic to " + value);
 
-    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, Math.ceil(value * (255 / 100)), 0, 0, 0, ...this.nlId.split(':'));
+    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, Math.ceil(value * (128 / 100)) + 27, 0, 0, 0, ...this.nlId.split(':'));
 
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
@@ -153,6 +158,10 @@ class Suf extends AccessoryBase {
       callback();
     })
 
+  }
+
+  getHomeKitbrightnessValue(nooLiteBrightnessValue) {
+    return Math.ceil(value * (128 / 100)) + 27
   }
 
   getAccessoryInformation() {
