@@ -48,7 +48,13 @@ class Suf extends AccessoryBase {
           onCharacteristic.updateValue(onValue);
         }
 
-        const currentBrightness = Math.ceil(nlCmd.d3 / (255 / 100))
+        let currentBrightness = Math.ceil(nlCmd.d3 / (128 / 100)) - 22;
+
+        if (currentBrightness > 100) {
+          currentBrightness = 100;
+        } else if (currentBrightness < 0) {
+          currentBrightness = 0;
+        }
 
         if (brightness.value !== currentBrightness) {
           brightness.updateValue(currentBrightness)
