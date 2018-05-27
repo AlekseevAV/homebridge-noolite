@@ -127,9 +127,9 @@ class Suf extends AccessoryBase {
 
       if (nlRes.isState() && nlRes.fmt === 0) {
         brightnessValue = Math.ceil(nlRes.d3 / (128 / 100)) - 22;
-        if (hkBrightness > 100) {
+        if (brightnessValue > 100) {
           brightnessValue = 100;
-        } else if (hkBrightness < 0) {
+        } else if (brightnessValue < 0) {
           brightnessValue = 0;
         }
       }
@@ -158,10 +158,6 @@ class Suf extends AccessoryBase {
       callback();
     })
 
-  }
-
-  getHomeKitbrightnessValue(nooLiteBrightnessValue) {
-    return Math.ceil(value * (128 / 100)) + 27
   }
 
   getAccessoryInformation() {
