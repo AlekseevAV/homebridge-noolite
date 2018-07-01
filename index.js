@@ -86,6 +86,13 @@ class NooLitePlatform {
     let serialPort = new SerialPort(serialPortPath, { autoOpen: false });
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
+      if (this.isOpen) {
+        this.close(_ => {
+          this.tryToOpenPort.bind(this, delayBetweenTries)
+        })
+        return;
+      }
+
       this.open(function(err) {
         if (err) {
           // Error serial port open callback
@@ -99,7 +106,7 @@ class NooLitePlatform {
             
             // Make next try after delayBetweenTries miliseconds
             platform.log.error('Next try after: ', delayBetweenTries);
-            setTimeout(this.tryToOpenPort.bind(null, delayBetweenTries), delayBetweenTries);
+            setTimeout(this.tryToOpenPort.bind(this, delayBetweenTries), delayBetweenTries);
 
         } else {
           platform.log('Sucess connect to NooLite MTRF')
