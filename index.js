@@ -5,6 +5,7 @@ const SerialPort = require('serialport');
 const addNooLiteCharacteristics = require('./lib/customCharacteristics');
 const NooLiteSerialParser = require('./lib/NooLiteSerialParser');
 const MTRFSerial = require('./lib/MTRFSerial');
+const NooLiteGUI = require('./lib/NooLiteGUI');
 
 
 let PLUGIN_NAME = pjson.name,
@@ -86,7 +87,7 @@ class NooLitePlatform {
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
       this.open(function(err) {
-        if (err) {
+        if (false) {
           // Error serial port open callback
           platform.log.error('Cannot connect to NooLite-MTRF: ', err.message);
           SerialPort.list()
@@ -170,92 +171,8 @@ class NooLitePlatform {
     this.accessories.push(accessory);
   }
 
-  // Handler will be invoked when user try to config your plugin.
-  // Callback can be cached and invoke when necessary.
   configurationRequestHandler(context, request, callback) {
-    this.log("Context: ", JSON.stringify(context));
-    this.log("Request: ", JSON.stringify(request));
-
-    if (request && request.type === 'Treminate') {
-      delete this.uiSessions[request.sid];
-      context['step'] = 1;
-    }
-
-    let current_step = context['step'] || 1;
-
-    let respDict;
-    let availableTypes = [];
-
-    for (let typeCode in this.AccessoryUtil.availableAccessories) {
-      if(this.AccessoryUtil.availableAccessories.hasOwnProperty(typeCode)) {
-        let type = this.AccessoryUtil.availableAccessories[typeCode];
-        availableTypes.push(`${typeCode}: ${type.displayName()} ${type.description()}`);
-      }
-    }
-
-    if (current_step === 1) {
-      respDict = {
-        "type": "Interface",
-        "interface": "input",
-        "title": "Создание аксессуара",
-        "items": [
-          {
-            "id": "name",
-            "title": "Название",
-            "placeholder": "Свет на кухне"
-          },
-          {
-            "id": "channel",
-            "title": "NooLite канал",
-            "placeholder": "1"
-          },
-          {
-            "id": "nooliteId",
-            "title": "NooLite ID",
-            "placeholder": "00:00:00:01"
-          }
-        ]
-      };
-      context['step'] = 2;
-    } else if (current_step === 2) {
-
-      respDict = {
-        "type": "Interface",
-        "interface": "list",
-        "title": "Выберите тип устройства",
-        "items": availableTypes
-      };
-
-      this.uiSessions[request.sid] = {
-        name: request.response.inputs.name,
-        channel: request.response.inputs.channel,
-        id: request.response.inputs.nooliteId,
-      };
-      context['step'] = 3;
-    } else if (current_step === 3) {
-      this.uiSessions[request.sid].accType = availableTypes[request.response.selections["0"]].split(':')[0];
-
-      this.addAccessory(
-        this.uiSessions[request.sid].name,
-        this.uiSessions[request.sid].accType,
-        this.uiSessions[request.sid].channel,
-        this.uiSessions[request.sid].id
-      );
-
-      // Invoke callback with config will let homebridge save the new config into config.json
-      // Callback = function(response, type, replace, config)
-      // set "type" to platform if the plugin is trying to modify platforms section
-      // set "replace" to true will let homebridge replace existing config in config.json
-      // "config" is the data platform trying to save
-
-      context['step'] = 1;
-      delete this.uiSessions[request.sid];
-      callback(null);
-      return;
-    }
-
-    // Invoke callback to update setup UI
-    callback(respDict);
+    return NooLiteGUI.apply(this, arguments);
   }
 
   // Sample function to show how developer can add accessory dynamically from outside event
