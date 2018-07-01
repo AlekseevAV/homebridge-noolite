@@ -87,7 +87,7 @@ class NooLitePlatform {
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
       this.open(function(err) {
-        if (false) {
+        if (err) {
           // Error serial port open callback
           platform.log.error('Cannot connect to NooLite-MTRF: ', err.message);
           SerialPort.list()
