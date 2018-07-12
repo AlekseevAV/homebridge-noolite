@@ -82,8 +82,10 @@ class NooLitePlatform {
 
   gerSerial(serialPortPath) {
     let platform = this;
-    
+
     let serialPort = new SerialPort(serialPortPath, { autoOpen: false });
+    
+    serialPort.nlParser = serialPort.pipe(new NooLiteSerialParser());
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
       if (this.isOpen) {
@@ -109,18 +111,14 @@ class NooLitePlatform {
             setTimeout(this.tryToOpenPort.bind(this, delayBetweenTries), delayBetweenTries);
 
         } else {
-          platform.log('Sucess connect to NooLite MTRF')
+          platform.log('Success connect to NooLite MTRF')
+          
+          this.nlParser = this.pipe(new NooLiteSerialParser());
         }
       });
     }
 
     serialPort.tryToOpenPort();
-
-    serialPort.nlParser = serialPort.pipe(new NooLiteSerialParser());
-
-    serialPort.nlParser.on('nlres', function (nlCommand) {
-      platform.log.debug('NooLite command:', nlCommand);
-    });
 
     serialPort.on('error', function(err) {
       platform.log.error('Serial port error: ', err)
@@ -128,7 +126,7 @@ class NooLitePlatform {
     })
 
     serialPort.on('close', function() {
-      platform.log.error('Serial port clouse. Reconnecting...')
+      platform.log.error('Serial port close. Reconnecting...')
       this.tryToOpenPort()
     })
 
