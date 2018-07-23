@@ -21,10 +21,10 @@
     "homebridge": ">=0.4.1"
   },
   "dependencies": {
+    "body-parser": "latest",
     "express": "^4.16.2",
     "nunjucks": "^3.1.0",
-    "serialport": "^6.0.5",
-    "sse-node": "^1.0.2",
-    "body-parser": "latest"
+    "serialport": "^6.2.2",
+    "sse-node": "^1.0.2"
   }
 }

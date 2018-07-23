@@ -1,11 +1,12 @@
-const pjson = require('./package.json')
+const pjson = require('./package.json');
 const server = require('./server');
 const AccessoryUtil = require('./accessories');
 const SerialPort = require('serialport');
+const ByteLength = require('@serialport/parser-byte-length');
 const addNooLiteCharacteristics = require('./lib/customCharacteristics');
-const NooLiteSerialParser = require('./lib/NooLiteSerialParser');
 const MTRFSerial = require('./lib/MTRFSerial');
 const NooLiteGUI = require('./lib/NooLiteGUI');
+const {NooLiteRequest, NooLiteResponse} = require('./lib/serialClasses');
 
 
 let PLUGIN_NAME = pjson.name,
@@ -84,8 +85,6 @@ class NooLitePlatform {
     let platform = this;
 
     let serialPort = new SerialPort(serialPortPath, { autoOpen: false });
-    
-    serialPort.nlParser = serialPort.pipe(new NooLiteSerialParser());
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
       if (this.isOpen) {
@@ -112,13 +111,26 @@ class NooLitePlatform {
 
         } else {
           platform.log('Success connect to NooLite MTRF')
-          
-          this.nlParser = this.pipe(new NooLiteSerialParser());
         }
       });
     }
 
     serialPort.tryToOpenPort();
+
+    serialPort.nlParser = serialPort.pipe(new ByteLength({length: 17}));
+
+    serialPort.nlParser.on('data', function(data) {
+        let nlReaponse = new NooLiteResponse(...data);
+
+        if (nlReaponse.isId()) {
+          // Emit event by NooLite id
+          this.emit(`nlres:${nlReaponse.getStrId()}`, nlReaponse);
+        }
+
+        // Emit event by NooLite channel
+        this.emit(`nlres:${nlReaponse.ch}`, nlReaponse);
+        this.emit('nlres', nlReaponse);
+    })
 
     serialPort.on('error', function(err) {
       platform.log.error('Serial port error: ', err)
