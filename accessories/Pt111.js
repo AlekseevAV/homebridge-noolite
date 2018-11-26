@@ -21,6 +21,9 @@ class Pt111 extends AccessoryBase {
     let currentTemperature = tempService.getCharacteristic(this.platform.Characteristic.CurrentTemperature);
     let tempLowBattery = tempService.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
 
+    // Задаем минимальную температуру, по умолчанию 0
+    currentTemperature.props.minValue = -40
+
     let humService = this.getOrCreateService(this.platform.Service.HumiditySensor);
     let currentHum = humService.getCharacteristic(this.platform.Characteristic.CurrentRelativeHumidity);
     let humLowBattery = humService.getCharacteristic(this.platform.Characteristic.StatusLowBattery);

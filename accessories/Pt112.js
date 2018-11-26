@@ -21,6 +21,9 @@ class Pt112 extends AccessoryBase {
     let currentTemperature = service.getCharacteristic(this.platform.Characteristic.CurrentTemperature);
     let lowBattery = service.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
     
+    // Задаем минимальную температуру, по умолчанию 0
+    currentTemperature.props.minValue = -40
+
     // Обработка поступивших команд от MTRF
     this.platform.serialPort.nlParser.on(`nlres:${this.nlChannel}`, (nlCmd) => {
       this.log('read data by CHANNEL: ', nlCmd);
