@@ -24,7 +24,9 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
  
     `serialPort` - путь до последовательного порта MTRF адапетра. Смотри файл `sampleConfig.json` для примера.
 
-4. Запустить homebridge
+4. Выдать права для доступа к адаптеру
+`sudo usermod -a -G dialout `
+5. Запустить homebridge
 
 ## Описание
 
