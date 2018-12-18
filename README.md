@@ -24,7 +24,9 @@ Read this in other languages: [Русский](https://github.com/AlekseevAV/hom
  
     `serialPort` - path to MTRF-64 serial port. See `sampleConfig.json` file for example.
 
-4. Run homebridge
+4. Fix permission to MTRF (For USB)
+`sudo usermod -a -G dialout `
+5. Run homebridge
 
 ## Description
 
