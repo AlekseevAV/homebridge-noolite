@@ -4,6 +4,8 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 
 Другие языки: [English](https://github.com/AlekseevAV/homebridge-noolite/blob/master/README.md)
 
+ТГ канал: https://t.me/Noolite (tg://t.me/Noolite)
+
 ## QuickStart
 
 1. Установить [homebridge](https://github.com/nfarina/homebridge)

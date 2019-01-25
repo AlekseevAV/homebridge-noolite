@@ -4,6 +4,8 @@ NooLite plugin (via [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.html) or [�
 
 Read this in other languages: [Русский](https://github.com/AlekseevAV/homebridge-noolite/blob/master/README.ru.md)
 
+TG channel: https://t.me/Noolite (tg://t.me/Noolite)
+
 ## QuickStart
 
 1. Install [homebridge](https://github.com/nfarina/homebridge)
