@@ -4,27 +4,34 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 
 Другие языки: [English](https://github.com/AlekseevAV/homebridge-noolite/blob/master/README.md)
 
+ТГ канал: https://t.me/Noolite (tg://t.me/Noolite)
+
 ## QuickStart
 
 1. Установить [homebridge](https://github.com/nfarina/homebridge)
-2. Установить homebridge-noolite плагин 
+2. Установить homebridge-noolite плагин
 
         $  sudo npm install -g --unsafe-perm homebridge-noolite
-   
+
 3. Добавить необходимые настройки homebridge в config.json
 
         ...
         "platforms": [
             {
               "platform": "NooLitePlatform",
-              "serialPort": "/dev/tty.usbserial-AL032Z5U"
+              "serialPort": "/dev/tty.usbserial-AL032Z5U",
+              "serverPort": "8080"
             }
           ]
         ...
- 
-    `serialPort` - путь до последовательного порта MTRF адапетра. Смотри файл `sampleConfig.json` для примера.
 
-4. Запустить homebridge
+    `serialPort` - путь до последовательного порта MTRF адапетра.
+    `serverPort` - порт веб-сервера, для привязки noolite устройств 
+    Смотри файл `sampleConfig.json` для примера.
+
+4. Выдать права для доступа к адаптеру
+`sudo usermod -a -G dialout `
+5. Запустить homebridge
 
 ## Описание
 
@@ -35,7 +42,7 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 
 На странице аксессуаров (`/acc`) доступно 2 раздела:
 
-1. MTRF - взаимодействие с MTRF адапеторм и привязанными NooLite-F устройствами по каналам (0-63) 
+1. MTRF - взаимодействие с MTRF адапеторм и привязанными NooLite-F устройствами по каналам (0-63)
 2. HomeKit - взаимодействие с HomeKit аксессуарами: список/создание/удаление
 
 ## Поддерживаемые NooLite устройства

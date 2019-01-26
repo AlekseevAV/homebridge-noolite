@@ -4,39 +4,46 @@ NooLite plugin (via [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.html) or [�
 
 Read this in other languages: [Русский](https://github.com/AlekseevAV/homebridge-noolite/blob/master/README.ru.md)
 
+TG channel: https://t.me/Noolite (tg://t.me/Noolite)
+
 ## QuickStart
 
 1. Install [homebridge](https://github.com/nfarina/homebridge)
-2. Install homebridge-noolite plugin 
+2. Install homebridge-noolite plugin
 
         $ sudo npm install -g --unsafe-perm homebridge-noolite
-   
+
 3. Add settings to homebridge config.json
 
         ...
         "platforms": [
             {
               "platform": "NooLitePlatform",
-              "serialPort": "/dev/tty.usbserial-AL032Z5U"
+              "serialPort": "/dev/tty.usbserial-AL032Z5U",
+              "serverPort": "8080"
             }
           ]
         ...
- 
-    `serialPort` - path to MTRF-64 serial port. See `sampleConfig.json` file for example.
 
-4. Run homebridge
+    `serialPort` - path to MTRF-64 serial port.
+    `serverPort` - web-ui port for add new noolite accessories
+    See `sampleConfig.json` file for example.
+
+4. Fix permission to MTRF (For USB)
+`sudo usermod -a -G dialout `
+5. Run homebridge
 
 ## Description
 
 After successful start web interface will be available on address: `<device_ip>:8080`
 
-On the main page, we can directly interact with the MTRF-64 adapter by sending commands presets or use raw bites, 
+On the main page, we can directly interact with the MTRF-64 adapter by sending commands presets or use raw bites,
 according to [MTRF-64 manual](https://www.noo.com.by/assets/files/PDF/MTRF-64-USB.pdf).
 
 There are 2 sections оn accessories page (`/acc`):
 
-1. MTRF - interact with NooLite-F devices (SLF, SRF blocks) by channels (0 to 63) 
-2. HomeKit - interact with HomeKit accessories 
+1. MTRF - interact with NooLite-F devices (SLF, SRF blocks) by channels (0 to 63)
+2. HomeKit - interact with HomeKit accessories
 
 ## NooLite supported accessories
 
