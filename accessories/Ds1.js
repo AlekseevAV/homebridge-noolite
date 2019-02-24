@@ -18,7 +18,7 @@ class Ds1 extends AccessoryBase {
     super.initOrCreateServices();
 
     let service = this.getOrCreateService(this.platform.Service.ContactSensor);
-    let constactState = service.getCharacteristic(this.platform.Characteristic.ContactSensorState);
+    let contactState = service.getCharacteristic(this.platform.Characteristic.ContactSensorState);
     let lowBattery = service.getCharacteristic(this.platform.Characteristic.StatusLowBattery);
     
     // Обработка поступивших команд от MTRF
@@ -32,10 +32,10 @@ class Ds1 extends AccessoryBase {
 
       switch (nlCmd.cmd) {
         case 0:
-          constactState.setValue(false);
+          contactState.setValue(false);
           break;
         case 2:
-          constactState.setValue(true);
+          contactState.setValue(true);
           break;
         case 20:
           lowBattery.setValue(true);
