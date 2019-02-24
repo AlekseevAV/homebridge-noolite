@@ -51,6 +51,7 @@ There are 2 sections оn accessories page (`/acc`):
 4. [SB](https://www.noo.com.by/silovoj-blok-sb111-150.html) block
 5. [SR](https://www.noo.com.by/silovoj-blok-sr211-2k0.html) block
 6. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB led strip block
+7. [SRF-R](https://www.noo.com.by/silovoj-blok-srf-1-1000-r.html) block for garage and home doors, window and window coverages
 
 #### Sensors:
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
@@ -65,5 +66,4 @@ There are 2 sections оn accessories page (`/acc`):
 
 ### TODO:
 1. SLF configuration improvements
-2. [SRF](https://www.noo.com.by/srf-10-1000.html) blocks
-4. Web interface UI/UX
+2. Web interface UI/UX

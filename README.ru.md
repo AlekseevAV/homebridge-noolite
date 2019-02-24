@@ -51,6 +51,7 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 4. [SB](https://www.noo.com.by/silovoj-blok-sb111-150.html) блок
 5. [SR](https://www.noo.com.by/silovoj-blok-sr211-2k0.html) блок
 6. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB контроллер
+7. [SRF-R](https://www.noo.com.by/silovoj-blok-srf-1-1000-r.html) блок для электроприводов роллет, рулонных штор, жалюзи, ворот и т.д.
 
 #### Датчики:
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
@@ -65,5 +66,4 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
 
 ### TODO:
 1. Конфигурирование SLF блока
-2. [SRF](https://www.noo.com.by/srf-10-1000.html) блоки
-3. UI/UX улучшения web интерфейса
+2. UI/UX улучшения web интерфейса
