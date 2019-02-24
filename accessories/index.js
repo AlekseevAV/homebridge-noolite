@@ -12,7 +12,11 @@ const availableAccessories = {
     'ws1': require('./Ws1'),
     'ds1': require('./Ds1'),
     'sd': require('./Sd'),
-    'garageDoorSlf': require('./GarageDoorSlf')
+    'garageDoorSlf': require('./GarageDoorSlf'),
+    'srfRDoor': require('./SrfRDoor'),
+    'srfRGarageDoor': require('./SrfRGarageDoor'),
+    'srfRWindow': require('./SrfRWindow'),
+    'srfRWindowCovering': require('./SrfRWindowCovering')
 };
 
 
