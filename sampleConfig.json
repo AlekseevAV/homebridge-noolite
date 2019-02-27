@@ -10,7 +10,8 @@
   "platforms": [
     {
       "platform": "NooLitePlatform",
-      "serialPort": "/dev/tty.usbserial-AL032Z5U"
+      "serialPort": "/dev/tty.usbserial-AL032Z5U",
+      "serverPort": "8080"
     }
   ]
 }
