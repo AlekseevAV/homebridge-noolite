@@ -27,22 +27,9 @@ class SrfRGarageDoor extends AccessoryBase {
     
         // State может быть только в одном состоянии 1 (OPEN) или 2 (CLOSED), а в NooLite мы управляем позицией через
         // задание яркости от 0 до 255
-        const targetValue = value == this.platform.Characteristic.TargetDoorState.OPEN ? 255 : 0;
+        const targetValue = value == this.platform.Characteristic.TargetDoorState.OPEN ? 100 : 0;
         let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, targetValue, 0, 0, 0, ...this.nlId.split(':'));
-    
-        // this.platform.sendCommand(command, (err, nlRes) => {
-        //   if (err) {
-        //     this.log('Error on write: ', err.message);
-        //     callback(new Error('Error on write'));
-        //     return;
-        //   } else if (nlRes.isError()) {
-        //     this.log('Error on response: ', nlRes);
-        //     callback(new Error('Error on response'));
-        //     return;
-        //   }
-    
-        //   callback();
-        // })
+
         callback();
 
         // проверяем статус изменения состояния две минуты
@@ -95,7 +82,7 @@ class SrfRGarageDoor extends AccessoryBase {
       if (nlRes.isState() && nlRes.fmt === 0) {
         if (nlRes.d3 == 0) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.CLOSED;
-        } else if (nlRes.d3 == 255) {
+        } else if (nlRes.d3 >= 100) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.OPEN;
         } else if (nlRes.d3 == acc.lastCurrentState) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.STOPPED;

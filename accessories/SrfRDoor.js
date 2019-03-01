@@ -26,8 +26,8 @@ class SrfRDoor extends AccessoryBase {
         this.log("Set position characteristic to " + value);
     
         // Управление позицией открытия/закрытия осуществляется в NooLite через задание соответствующей яркости
-        // от 0 до 255. Из HomeKit значение приходит от 0 до 100
-        let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, Math.ceil(value * 2.55), 0, 0, 0, ...this.nlId.split(':'));
+        // от 0 до 100
+        let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 0, value, 0, 0, 0, ...this.nlId.split(':'));
     
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
@@ -91,6 +91,8 @@ class SrfRDoor extends AccessoryBase {
       let brightnessValue = acc.value || 0;
 
       if (nlRes.isState() && nlRes.fmt === 0) {
+        // А в ответе блока яркость приходит уже от 0 до 255. То есть управлять нужно 0-100,
+        // а получать ответ 0-255. Странно, но как есть.
         brightnessValue = Math.ceil(nlRes.d3 / 2.55);
       }
 
