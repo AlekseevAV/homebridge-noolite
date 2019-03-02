@@ -1,4 +1,4 @@
-const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
+const {NooLiteRequest} = require('../lib/serialClasses');
 const AccessoryBase = require('./AccessoryBase');
 
 
@@ -24,35 +24,53 @@ class SrfRGarageDoor extends AccessoryBase {
     targetState
       .on('set', (value, callback) => {
         this.log("Set state characteristic to " + value);
-    
-        // State может быть только в одном состоянии 1 (OPEN) или 2 (CLOSED), а в NooLite мы управляем позицией через
-        // задание яркости от 0 до 255
-        const targetValue = value == this.platform.Characteristic.TargetDoorState.OPEN ? 100 : 0;
-        let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, targetValue, 0, 0, 0, ...this.nlId.split(':'));
 
-        callback();
+        // State может быть только в одном состоянии OPEN или CLOSED
+        const cmd = value == this.platform.Characteristic.TargetDoorState.OPEN ? 2 : 0;
+        let command = new NooLiteRequest(this.nlChannel, cmd, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
-        // проверяем статус изменения состояния две минуты
-        let endCheckingTimestamp = new Date().getTime() + 2 * 60 * 1000;
+        this.platform.sendCommand(command, (err, nlRes) => {
+          if (err) {
+            this.log('Error on write: ', err.message);
+            callback(new Error('Error on write'));
+            return;
+          } else if (nlRes.isError()) {
+            this.log('Error on response: ', nlRes);
+            callback(new Error('Error on response'));
+            return;
+          }
 
-        setTimeout(function check(retry=3) {
-          this.getState((err, newValue) => {
-            if (err) {
-              if (retry > 3) {
-                setTimeout(check.bind(this), 2000, retry - 1);
+          callback();
+
+          // проверяем статус изменения состояния две минуты
+          let endCheckingTimestamp = new Date().getTime() + 2 * 60 * 1000;
+
+          setTimeout(function check(retry=3) {
+            this.getState((err, newValue) => {
+              if (err) {
+                if (retry > 3) {
+                  setTimeout(check.bind(this), 2000, retry - 1);
+                }
               }
-            }
-            let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
 
-            if (newValue == value) {
-              currentState.setValue(value)
-            } else if (!timeToCheckIsOver) {
-              setTimeout(check.bind(this), 2000, 3)
-            }
+              // ставим текущее состояние
+              this.currentState.setValue(newValue)
 
-          })
-        }.bind(this), 2000);
+              let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
+              
+              this.log(`Got value from block "${newValue}", target value "${this.targetPosition.value}"`);
+              const isStopped = newValue == this.platform.Characteristic.CurrentDoorState.STOPPED;
+              if (newValue == this.targetState.value || isStopped) {
+                // Текущее состояние стало равно целевому или текущее состояние "Остановлено", выходим
+                return
+              } else if (!timeToCheckIsOver) {
+                setTimeout(check.bind(this), 2000, 3)
+              }
 
+            })
+          }.bind(this), 2000);
+
+        })
       })
     
     currentState
@@ -80,9 +98,13 @@ class SrfRGarageDoor extends AccessoryBase {
       acc.lastCurrentState = acc.lastCurrentState ? acc.lastCurrentState : 0;
 
       if (nlRes.isState() && nlRes.fmt === 0) {
-        if (nlRes.d3 == 0) {
+        // У NooLite тут какая-то инверсия с командами открыть (2), закрыть (0) и яркостью, которая
+        // устанавливается у блока. Когда блоку передаем команду открытия (cmd = 2), то блок
+        // ПОНИЖАЕТ яркость от 255 до 0, а когда команду закрыть (cmd = 0), то наоборот, ПОВЫШАЕТ
+        // То есть логика работает не так как со светом, кода ВКЛ ставит яркость на 255, а ВЫКЛ на 0
+        if (nlRes.d3 == 255) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.CLOSED;
-        } else if (nlRes.d3 >= 100) {
+        } else if (nlRes.d3 == 0) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.OPEN;
         } else if (nlRes.d3 == acc.lastCurrentState) {
           currentStateResponse = this.platform.Characteristic.CurrentDoorState.STOPPED;
