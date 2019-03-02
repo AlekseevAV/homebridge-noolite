@@ -1,8 +1,7 @@
-const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
-const SrfRWindow = require('./SrfRWindow');
+const SrfRDoor = require('./SrfRDoor');
 
 
-class SrfRWindowCovering extends SrfRWindow {
+class SrfRWindowCovering extends SrfRDoor {
   static displayName() {
     return 'SRF-1-1000-R Window Covering';
   }
@@ -18,7 +17,7 @@ class SrfRWindowCovering extends SrfRWindow {
     let targetPosition = windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
     targetPosition
-      .on('set', this.setPosition.bind(this))
+      .on('set', this.setPosition.bind(this));
     
     currentPosition
       .on('get', this.getPosition.bind(this));
