@@ -1,4 +1,3 @@
-const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
 const SrfRDoor = require('./SrfRDoor');
 
 
@@ -18,7 +17,7 @@ class SrfRWindow extends SrfRDoor {
     let targetPosition = windowService.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
     targetPosition
-      .on('set', this.setPosition.bind(this))
+      .on('set', this.setPosition.bind(this));
     
     currentPosition
       .on('get', this.getPosition.bind(this));
