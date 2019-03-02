@@ -1,4 +1,4 @@
-const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
+const {NooLiteRequest} = require('../lib/serialClasses');
 const AccessoryBase = require('./AccessoryBase');
 
 
@@ -21,54 +21,90 @@ class SrfRDoor extends AccessoryBase {
     let currentPosition = doorService.getCharacteristic(this.platform.Characteristic.CurrentPosition);
     let targetPosition = doorService.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
+    this.targetPosition = targetPosition;
+
     targetPosition
-      .on('set', (value, callback) => {
-        this.log("Set position characteristic to " + value);
-    
-        // Управление позицией открытия/закрытия осуществляется в NooLite через задание соответствующей яркости
-        // от 0 до 100
-        let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 0, value, 0, 0, 0, ...this.nlId.split(':'));
-    
-        this.platform.sendCommand(command, (err, nlRes) => {
-          if (err) {
-            this.log('Error on write: ', err.message);
-            callback(new Error('Error on write'));
-            return;
-          } else if (nlRes.isError()) {
-            this.log('Error on response: ', nlRes);
-            callback(new Error('Error on response'));
-            return;
-          }
-    
-          callback();
+      .on('set', this.debounceSetPosition.bind(this));
 
-          // проверяем статус изменения состояния две минуты
-          let endCheckingTimestamp = new Date().getTime() + 2 * 60 * 1000;
-
-          setTimeout(function check(retry=3) {
-            this.getPosition((err, newValue) => {
-              if (err) {
-                if (retry > 3) {
-                  setTimeout(check.bind(this), 2000, retry - 1);
-                }
-              }
-              let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
-
-              if (newValue == value) {
-                currentPosition.setValue(value)
-              } else if (!timeToCheckIsOver) {
-                setTimeout(check.bind(this), 2000, 3)
-              }
-
-            })
-          }.bind(this), 2000);
-
-        })
-        
-      })
-    
     currentPosition
       .on('get', this.getPosition.bind(this));
+  }
+
+  debounceSetPosition(value, callback) {
+    // Так как при перемещении слайдера открытости/закрытости возможны пороговые колебания
+    // целевого значения, то применяем дебаунс для учета только последнего установленного значения
+
+    let timer = null;
+  
+    return function () {
+      const onComplete = () => {
+        setPosition.bind(this).apply(this, value, callback);
+        timer = null;
+      }
+  
+      if (timer) {
+        clearTimeout(timer);
+      }
+  
+      timer = setTimeout(onComplete, 1000);
+    };
+  }
+
+  setPosition(value, callback) {
+    this.log("Set position characteristic to " + value);
+
+    // Управление позицией открытия/закрытия осуществляется в NooLite через задание соответствующей яркости
+    // от 0 до 100
+    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 0, value, 0, 0, 0, ...this.nlId.split(':'));
+
+    this.platform.sendCommand(command, (err, nlRes) => {
+      if (err) {
+        this.log('Error on write: ', err.message);
+        callback(new Error('Error on write'));
+        return;
+      } else if (nlRes.isError()) {
+        this.log('Error on response: ', nlRes);
+        callback(new Error('Error on response'));
+        return;
+      }
+
+      callback();
+
+      // проверяем статус изменения состояния две минуты
+      let endCheckingTimestamp = new Date().getTime() + 2 * 60 * 1000;
+
+      setTimeout(function check(retry=3) {
+        this.getPosition((err, newValue) => {
+          if (err) {
+            if (retry > 3) {
+              setTimeout(check.bind(this), 2000, retry - 1);
+            }
+          }
+          let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
+          
+          // здесь мы получаем и проверяем не первоначальную команду таргет стейта, а запрашиваем
+          // текущее его значение, так как оно уже могло поменяться
+
+          // еще одна тонкость - так как блок возвращает состояние своей открытости/закрытости в
+          // показателях от 0 до 255 и мы их переводим в 0-100 с использованием округления, то
+          // были проблемы, когда, к примеру, значение 140 неверно округлялось и нам не получалось
+          // установить, что текущее состояние == целевому. Решение: считаем, что текущее состояние
+          // совпало с целевым, если целевое входи в массив [n - 1, n, n + 1], где n - текущее
+          // состояние блока
+          const newValueArray = [newValue - 1, newValue, newValue + 1];
+
+          this.log(`Got value from block "${newValue}", target value "${this.targetPosition.value}"`);
+          if (newValueArray.includes(this.targetPosition.value)) {
+            currentPosition.setValue(this.targetPosition.value)
+          } else if (!timeToCheckIsOver) {
+            setTimeout(check.bind(this), 2000, 3)
+          }
+
+        })
+      }.bind(this), 2000);
+
+    })
+    
   }
 
   getPosition(callback) {
