@@ -18,10 +18,10 @@ class SrfRGarageDoor extends AccessoryBase {
     super.initOrCreateServices();
 
     let garageDoor = this.getOrCreateService(this.platform.Service.GarageDoorOpener);
-    let currentState = garageDoor.getCharacteristic(this.platform.Characteristic.CurrentDoorState);
-    let targetState = garageDoor.getCharacteristic(this.platform.Characteristic.TargetDoorState);
+    this.currentState = garageDoor.getCharacteristic(this.platform.Characteristic.CurrentDoorState);
+    this.targetState = garageDoor.getCharacteristic(this.platform.Characteristic.TargetDoorState);
 
-    targetState
+    this.targetState
       .on('set', (value, callback) => {
         this.log("Set state characteristic to " + value);
 
@@ -73,7 +73,7 @@ class SrfRGarageDoor extends AccessoryBase {
         })
       })
     
-    currentState
+    this.currentState
       .on('get', this.getState.bind(this));
   }
 

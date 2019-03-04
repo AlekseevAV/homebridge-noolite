@@ -13,13 +13,13 @@ class SrfRWindowCovering extends SrfRDoor {
     super.initOrCreateServices();
 
     let windowCoveringService = this.getOrCreateService(this.platform.Service.WindowCovering);
-    let currentPosition = windowCoveringService.getCharacteristic(this.platform.Characteristic.CurrentPosition);
-    let targetPosition = windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition);
+    this.currentPosition = windowCoveringService.getCharacteristic(this.platform.Characteristic.CurrentPosition);
+    this.targetPosition = windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
-    targetPosition
-      .on('set', this.setPosition.bind(this));
-    
-    currentPosition
+    this.targetPosition
+      .on('set', this.setPositionDebounce.bind(this));
+
+    this.currentPosition
       .on('get', this.getPosition.bind(this));
   }
 

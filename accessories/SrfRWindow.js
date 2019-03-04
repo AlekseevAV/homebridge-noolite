@@ -13,13 +13,13 @@ class SrfRWindow extends SrfRDoor {
     super.initOrCreateServices();
 
     let windowService = this.getOrCreateService(this.platform.Service.Window);
-    let currentPosition = windowService.getCharacteristic(this.platform.Characteristic.CurrentPosition);
-    let targetPosition = windowService.getCharacteristic(this.platform.Characteristic.TargetPosition);
+    this.currentPosition = windowService.getCharacteristic(this.platform.Characteristic.CurrentPosition);
+    this.targetPosition = windowService.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
-    targetPosition
-      .on('set', this.setPosition.bind(this));
-    
-    currentPosition
+    this.targetPosition
+      .on('set', this.setPositionDebounce.bind(this));
+
+    this.currentPosition
       .on('get', this.getPosition.bind(this));
   }
 
