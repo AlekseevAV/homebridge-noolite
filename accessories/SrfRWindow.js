@@ -1,7 +1,7 @@
-const SrfRDoor = require('./SrfRDoor');
+const SrfRPositionBase = require('./SrfRPositionBase');
 
 
-class SrfRWindow extends SrfRDoor {
+class SrfRWindow extends SrfRPositionBase {
   static displayName() {
     return 'SRF-1-1000-R Window';
   }

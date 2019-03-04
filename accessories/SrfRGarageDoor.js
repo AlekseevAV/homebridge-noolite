@@ -58,7 +58,7 @@ class SrfRGarageDoor extends AccessoryBase {
 
               let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
               
-              this.log(`Got value from block "${newValue}", target value "${this.targetPosition.value}"`);
+              this.log(`Got value from block "${newValue}", target value "${this.targetState.value}"`);
               const isStopped = newValue == this.platform.Characteristic.CurrentDoorState.STOPPED;
               if (newValue == this.targetState.value || isStopped) {
                 // Текущее состояние стало равно целевому или текущее состояние "Остановлено", выходим
