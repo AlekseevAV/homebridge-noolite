@@ -42,18 +42,28 @@ module.exports = function(nooLitePlatform){
     .patch((req, res) => {
       let characteristic = nooLitePlatform.AccessoryUtil.getAccSerciceCharacteristic(req.params.accUUID, req.params.sUUID, req.params.cUUID);
 
-      if (characteristic && req.query.value) {
-        let newValue = JSON.parse(req.query.value);
-
-        characteristic.setValue(newValue, (err) => {
-          if (!err) {
-            res.json({status: 'ok', characteristic: characteristic});
-            return;
-          }
-
-          res.json({status: 'fail'});
-        });
+      if (characteristic == null) {
+        res.json({status: 'fail', description: `Characteristic not found by params: ${JSON.stringify(req.params)}`});
+        return;
       }
+
+      if (req.body.value == undefined) {
+        res.json({status: 'fail', description: `Request body must contains "value" param. Got "${JSON.stringify(req.body)}" instead.`});
+        return;
+      }
+
+      let newValue = req.body.value;
+
+      characteristic.setValue(newValue, (err) => {
+        if (!err) {
+          res.json({status: 'ok', characteristic: characteristic});
+          return;
+        }
+
+        res.json({status: 'fail', description: `Error on change characteristic value: ${err}`});
+        return;
+      });
+
     });
 
   // NooLite канал
