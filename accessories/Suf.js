@@ -115,6 +115,7 @@ class Suf extends AccessoryBase {
   getBrightnessState(callback) {
     this.log("get brightness value");
     let acc = this.accessory;
+    let self = this;
 
     let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
@@ -132,7 +133,7 @@ class Suf extends AccessoryBase {
       let brightnessValue = acc.value;
 
       if (nlRes.isState() && nlRes.fmt === 0) {
-        brightnessValue = Math.ceil(nlRes.d3 / (128 / 100)) - 22;
+        brightnessValue = self.valueConverter(nlRes.d3, 255, 100);
         if (brightnessValue > 100) {
           brightnessValue = 100;
         } else if (brightnessValue < 0) {
@@ -148,7 +149,8 @@ class Suf extends AccessoryBase {
   setBrightnessState(value, callback) {
     this.log("Set Brightness characteristic to " + value);
 
-    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, Math.ceil(value * (128 / 100)) + 27, 0, 0, 0, ...this.nlId.split(':'));
+    // Яркость устанавливается в диапазоне 35-155 (то есть 0-120 + 35). Из HomeKit приходит в 0-100
+    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, this.valueConverter(value, 100, 120, 35), 0, 0, 0, ...this.nlId.split(':'));
 
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
@@ -164,6 +166,19 @@ class Suf extends AccessoryBase {
       callback();
     })
 
+  }
+
+  valueConverter(value, from, to, offset) {
+    // Конвертор значений одних диапазонов значений в другие
+    // При отправке команды мы задаем яркость как значение 0-100, 
+    // а получаем текущее значение в диапазоне 0-255
+    value = Math.ceil((value / from) * to)
+    
+    if (offset) {
+      value += offset
+    }
+
+    return value
   }
 
   getAccessoryInformation() {
