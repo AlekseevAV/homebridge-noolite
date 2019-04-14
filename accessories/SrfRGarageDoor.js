@@ -26,7 +26,16 @@ class SrfRGarageDoor extends AccessoryBase {
         this.log("Set state characteristic to " + value);
 
         // State может быть только в одном состоянии OPEN или CLOSED
-        const cmd = value == this.platform.Characteristic.TargetDoorState.OPEN ? 2 : 0;
+        let cmd;
+
+        if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.OPENING) {
+          cmd = this.platform.Characteristic.TargetDoorState.OPEN;
+        } else if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.CLOSING) {
+          cmd = this.platform.Characteristic.TargetDoorState.CLOSE;
+        } else {
+          cmd = value == this.platform.Characteristic.TargetDoorState.OPEN ? 2 : 0;
+        }
+
         let command = new NooLiteRequest(this.nlChannel, cmd, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
         this.platform.sendCommand(command, (err, nlRes) => {
