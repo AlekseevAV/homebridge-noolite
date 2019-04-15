@@ -20,17 +20,21 @@ TG channel: https://t.me/Noolite (tg://t.me/Noolite)
             {
               "platform": "NooLitePlatform",
               "serialPort": "/dev/tty.usbserial-AL032Z5U",
-              "serverPort": "8080"
+              "serverPort": "8080",
+              "periodicAccessoryUpdate": 5
             }
           ]
         ...
 
-    `serialPort` - path to MTRF-64 serial port.
-    `serverPort` - web-ui port for add new noolite accessories
+    * `serialPort` - path to MTRF-64 serial port _required_
+    * `serverPort` - web-ui port for add new noolite accessories _optional, default: 8080_
+    * `periodicAccessoryUpdate` - periodically update NooLite-F accessories status (in seconds) _optional, default this feature is disabled_
+    
     See `sampleConfig.json` file for example.
 
-4. Fix permission to MTRF (For USB)
+1. Fix permission to MTRF (For USB)
 `sudo usermod -a -G dialout `
+
 5. Run homebridge
 
 ## Description

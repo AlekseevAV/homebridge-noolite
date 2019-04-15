@@ -45,6 +45,8 @@ class NooLitePlatform {
     let serverPort = config['serverPort'] || 8080,
         serialPort = config['serialPort'];
 
+    this.periodicAccessoryUpdate = parseInt(config['periodicAccessoryUpdate']);
+
     // Initialize
     this.AccessoryUtil = new AccessoryUtil(platform);
     this.server = server(this);

@@ -20,17 +20,21 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
             {
               "platform": "NooLitePlatform",
               "serialPort": "/dev/tty.usbserial-AL032Z5U",
-              "serverPort": "8080"
+              "serverPort": "8080",
+              "periodicAccessoryUpdate": 5
             }
           ]
         ...
 
-    `serialPort` - путь до последовательного порта MTRF адапетра.
-    `serverPort` - порт веб-сервера, для привязки noolite устройств 
+    * `serialPort` - путь до последовательного порта MTRF адапетра _обязательный_
+    * `serverPort` - порт веб-сервера, для привязки noolite устройств _опциональный, по умолчанию 8080_
+    * `periodicAccessoryUpdate` - переодически обновляет статус NooLite-F устройств (в секундах) _опциональный, по умолчанию эта функция отключена_
+
     Смотри файл `sampleConfig.json` для примера.
 
 4. Выдать права для доступа к адаптеру
 `sudo usermod -a -G dialout `
+
 5. Запустить homebridge
 
 ## Описание

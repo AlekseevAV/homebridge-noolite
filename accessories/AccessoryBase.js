@@ -26,6 +26,12 @@ class AccessoryBase {
     return null;
   }
 
+  createPeriodicTasks() {
+    // Создание переодических тасков, 
+    // к примеру для переодического опроса NooLite-F блоков
+    return null;
+  }
+
   initOrCreateServices() {
     // Accessory Information
     let accessoryInformation = this.getAccessoryInformation();
@@ -46,6 +52,8 @@ class AccessoryBase {
   init() {
     // Инициализируем или создаем сервисы аксессуара
     this.initOrCreateServices();
+    // Вызываем метод для создания переодических тасков
+    this.createPeriodicTasks();
   }
 }
 
