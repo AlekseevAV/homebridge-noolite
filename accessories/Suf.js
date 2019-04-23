@@ -59,7 +59,7 @@ class Suf extends AccessoryBase {
           onCharacteristic.updateValue(onValue);
         }
 
-        let currentBrightness = Math.ceil(nlCmd.d3 / (128 / 100)) - 22;
+        let currentBrightness = this.valueConverter(nlCmd.d3, 255, 100);
 
         if (currentBrightness > 100) {
           currentBrightness = 100;
@@ -161,7 +161,7 @@ class Suf extends AccessoryBase {
     this.log("Set Brightness characteristic to " + value);
 
     // Яркость устанавливается в диапазоне 35-155 (то есть 0-120 + 35). Из HomeKit приходит в 0-100
-    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, this.valueConverter(value, 100, 120, 35), 0, 0, 0, ...this.nlId.split(':'));
+    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 0, this.valueConverter(value, 100, 255), 0, 0, 0, ...this.nlId.split(':'));
 
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
