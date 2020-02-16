@@ -16,7 +16,8 @@ const availableAccessories = {
     'srfRDoor': require('./SrfRDoor'),
     'srfRGarageDoor': require('./SrfRGarageDoor'),
     'srfRWindow': require('./SrfRWindow'),
-    'srfRWindowCovering': require('./SrfRWindowCovering')
+    'srfRWindowCovering': require('./SrfRWindowCovering'),
+    'SrfTermostat': require('./SrfTermostat')
 };
 
 
