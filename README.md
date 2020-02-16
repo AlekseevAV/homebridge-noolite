@@ -59,6 +59,7 @@ There are 2 sections оn accessories page (`/acc`):
 5. [SR](https://www.noo.com.by/silovoj-blok-sr211-2k0.html) block
 6. [SD](https://www.noo.com.by/silovoj-blok-SD111-180.html) RGB led strip block
 7. [SRF-R](https://www.noo.com.by/silovoj-blok-srf-1-1000-r.html) block for garage and home doors, window and window coverages
+8. [SRF-1-3000-T](https://www.noo.com.by/silovoj-blok-srf-1-3000-t.html) block for controlling electric heating systems
 
 #### Sensors:
 1. Motion sensor [PM112](https://www.noo.com.by/pm112-sensor.html)
