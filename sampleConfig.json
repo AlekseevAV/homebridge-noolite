@@ -12,7 +12,9 @@
       "platform": "NooLitePlatform",
       "serialPort": "/dev/tty.usbserial-AL032Z5U",
       "serverPort": "8080",
-      "periodicAccessoryUpdate": 5
+      "periodicAccessoryUpdate": 5,
+      "requestTtl": 1000,
+      "serialWriteDelayMs": 250
     }
   ]
 }

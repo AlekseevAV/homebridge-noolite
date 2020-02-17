@@ -21,7 +21,9 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
               "platform": "NooLitePlatform",
               "serialPort": "/dev/tty.usbserial-AL032Z5U",
               "serverPort": "8080",
-              "periodicAccessoryUpdate": 5
+              "periodicAccessoryUpdate": 5,
+              "requestTtl": 1000,
+              "serialWriteDelayMs": 250
             }
           ]
         ...
@@ -29,6 +31,8 @@ NooLite плагин (для [USB MTRF-64](https://www.noo.com.by/mtrf-64-usb.ht
     * `serialPort` - путь до последовательного порта MTRF адапетра _обязательный_
     * `serverPort` - порт веб-сервера, для привязки noolite устройств _опциональный, по умолчанию 8080_
     * `periodicAccessoryUpdate` - переодически обновляет статус NooLite-F устройств (в секундах) _опциональный, по умолчанию эта функция отключена_
+    * `requestTtl` - время ожидания ответа от блока в миллисекундах
+    * `serialWriteDelayMs` - задержка между отправками команд на блоки в миллисекунда (при слишком маленьком времени MTRF адаптер может не успевать обрабатывать запросы/ответы к блокам)
 
     Смотри файл `sampleConfig.json` для примера.
 
