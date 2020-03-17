@@ -4,7 +4,7 @@ const AccessoryBase = require('./AccessoryBase');
 
 class Slf extends AccessoryBase {
   static displayName() {
-    return 'SLF';
+    return 'SLF/SRF';
   }
   static description() {
     return 'блок с протоколом nooLite-F';
