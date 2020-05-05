@@ -74,7 +74,7 @@ There are 2 sections оn accessories page (`/acc`):
 
 #### Custom accessories:
 1. Garage Door accessory - based on SLF block, send 8 command (Power On by 1.5 seconds) to block on Open/Close action.
-   Default setting is the interval of 20 seconds for the complete opening/closing of the door.
+   Default setting is the interval of 1 second for the complete opening/closing of the door.
 
 ### TODO:
 1. SLF configuration improvements
