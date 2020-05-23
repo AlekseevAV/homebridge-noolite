@@ -4,6 +4,15 @@ const {NooLiteRequest, NooLiteResponse} = require('../lib/serialClasses');
 
 router = express.Router();
 
+function accToJsonSafe(acc) {
+  return {
+    context: acc.context,
+    services: acc.services,
+    UUID: acc.UUID,
+    displayName: acc.displayName,
+  }
+}
+
 module.exports = function(nooLitePlatform){
   router.route('/hk/acc')
     // Список всех созданных HK аксессуаров
@@ -12,15 +21,7 @@ module.exports = function(nooLitePlatform){
       // приводит к ошибке "Converting circular structure to JSON"
       // Поэтому собираем для ответа только некоторые из полей, не все
       // Если на фронте понадобятся какие-то данные, то тут их можно добавить в ответ
-      let accessoriesArray = [];
-      for (let accessory of nooLitePlatform.accessories) {
-        accessoriesArray.push({
-          context: accessory.context,
-          services: accessory.services,
-          UUID: accessory.UUID,
-          displayName: accessory.displayName,
-        })
-      }
+      let accessoriesArray = nooLitePlatform.accessories.map(accToJsonSafe);
       res.json({status: 'ok', accList: accessoriesArray})
     })
     // Создание нового HK аксессуара
@@ -28,7 +29,7 @@ module.exports = function(nooLitePlatform){
       let acc = req.body;
       let newAcc = nooLitePlatform.addAccessory(acc.name, acc.type, acc.channel, acc.id);
 
-      res.json({status: 'ok', acc: newAcc});
+      res.json({status: 'ok', acc: accToJsonSafe(newAcc)});
     });
 
   // Аксессуар
