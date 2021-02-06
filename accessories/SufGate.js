@@ -2,12 +2,12 @@ const {NooLiteRequest} = require('../lib/serialClasses');
 const AccessoryBase = require('./AccessoryBase');
 
 
-class SrfRGate extends AccessoryBase {
+class SufGate extends AccessoryBase {
   static displayName() {
-    return 'SRF-1-1000-R Gate';
+    return 'SUF Gate';
   }
   static description() {
-    return 'Силовой блок nooLite-F SRF-1-1000-R для управления гаражными воротами';
+    return 'Силовой блок nooLite-F SUF для управления гаражными воротами';
   }
 
   static getAccessoryCategory() {
@@ -40,6 +40,19 @@ class SrfRGate extends AccessoryBase {
 
           callback();
 
+          if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.OPENING) {
+            newState = this.platform.Characteristic.TargetDoorState.OPEN;
+          } else if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.CLOSING) {
+            newState = this.platform.Characteristic.TargetDoorState.CLOSE;
+          } else {
+            newState = value == this.platform.Characteristic.TargetDoorState.OPEN ? 2 : 0;
+          }
+
+          setTimeout(function() {
+            // ставим текущее состояние
+            this.currentState.setValue(newState)
+          }.bind(this), 5000);
+
         })
       })
   }
@@ -47,10 +60,10 @@ class SrfRGate extends AccessoryBase {
   getAccessoryInformation() {
       return {
           'Manufacturer': 'NooLite',
-          'Model': 'SRF-1-1000-R',
+          'Model': 'SUF',
           'SerialNumber': '0.0.1'
       };
   }
 }
 
-module.exports = SrfRGate;
+module.exports = SufGate;
