@@ -40,34 +40,6 @@ class SrfRGate extends AccessoryBase {
 
           callback();
 
-          // проверяем статус изменения состояния две минуты
-          let endCheckingTimestamp = new Date().getTime() + 2 * 60 * 1000;
-
-          setTimeout(function check(retry=3) {
-            this.getState((err, newValue) => {
-              if (err) {
-                if (retry > 3) {
-                  setTimeout(check.bind(this), 2000, retry - 1);
-                }
-              }
-
-              // ставим текущее состояние
-              this.currentState.setValue(newValue)
-
-              let timeToCheckIsOver = new Date().getTime() > endCheckingTimestamp;
-              
-              this.log(`Got value from block "${newValue}", target value "${this.targetState.value}"`);
-              const isStopped = newValue == this.platform.Characteristic.CurrentDoorState.STOPPED;
-              if (newValue == this.targetState.value || isStopped) {
-                // Текущее состояние стало равно целевому или текущее состояние "Остановлено", выходим
-                return
-              } else if (!timeToCheckIsOver) {
-                setTimeout(check.bind(this), 2000, 3)
-              }
-
-            })
-          }.bind(this), 2000);
-
         })
       })
   }
