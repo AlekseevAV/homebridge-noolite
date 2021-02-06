@@ -40,17 +40,23 @@ class SufGate extends AccessoryBase {
 
           callback();
 
-          if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.OPENING) {
-            newState = this.platform.Characteristic.TargetDoorState.OPEN;
-          } else if (this.currentState.value == this.platform.Characteristic.CurrentDoorState.CLOSING) {
-            newState = this.platform.Characteristic.TargetDoorState.CLOSE;
+          let newCurrentState;
+          if (value == this.platform.Characteristic.TargetDoorState.OPEN) {
+            this.currentState.setValue(this.platform.Characteristic.CurrentDoorState.OPENING)
+            newCurrentState = this.platform.Characteristic.CurrentDoorState.OPEN;
           } else {
-            newState = value == this.platform.Characteristic.TargetDoorState.OPEN ? 2 : 0;
+            this.currentState.setValue(this.platform.Characteristic.CurrentDoorState.CLOSING)
+            newCurrentState = this.platform.Characteristic.CurrentDoorState.CLOSED;
           }
 
-          setTimeout(function() {
+          if (this.accessory.lastTimerId !== null) {
+            clearTimeout(this.accessory.lastTimerId);
+          };
+
+          this.accessory.lastTimerId = setTimeout(function() {
             // ставим текущее состояние
-            this.currentState.setValue(newState)
+            this.currentState.setValue(newCurrentState);
+            this.accessory.lastTimerId = null;
           }.bind(this), 5000);
 
         })
