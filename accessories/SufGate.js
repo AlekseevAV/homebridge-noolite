@@ -20,6 +20,7 @@ class SufGate extends AccessoryBase {
     let garageDoor = this.getOrCreateService(this.platform.Service.GarageDoorOpener);
     this.currentState = garageDoor.getCharacteristic(this.platform.Characteristic.CurrentDoorState);
     this.targetState = garageDoor.getCharacteristic(this.platform.Characteristic.TargetDoorState);
+    this.timeToOpenClose = garageDoor.getCharacteristic(this.platform.Characteristic.TimeToOpenClose);
 
     this.targetState
       .on('set', (value, callback) => {
@@ -57,7 +58,7 @@ class SufGate extends AccessoryBase {
             // ставим текущее состояние
             this.currentState.setValue(newCurrentState);
             this.accessory.lastTimerId = null;
-          }.bind(this), 5000);
+          }.bind(this), this.timeToOpenClose.value * 1000);
 
         })
       })
