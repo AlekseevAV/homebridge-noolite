@@ -60,6 +60,10 @@ class Slf extends AccessoryBase {
     let acc = this.accessory;
 
     let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
+    
+    if (this.platform.immediatelyResponse){
+      callback(null, acc.value);
+    }
 
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
@@ -77,8 +81,10 @@ class Slf extends AccessoryBase {
       if (nlRes.isState() && nlRes.fmt === 0) {
         onValue = nlRes.d2 > 0;
       }
-
-      callback(null, onValue);
+      if (!this.platform.immediatelyResponse){
+        callback(null, onValue);  
+      }
+      
     })
 
   }

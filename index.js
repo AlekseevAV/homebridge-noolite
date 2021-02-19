@@ -46,13 +46,14 @@ class NooLitePlatform {
         serialPort = config['serialPort'];
 
     this.periodicAccessoryUpdate = parseInt(config['periodicAccessoryUpdate']);
-
+    this.immediatelyResponse = config['immediatelyResponse'] || false;
+    
     // Initialize
     this.AccessoryUtil = new AccessoryUtil(platform);
     this.server = server(this);
 
     // Serial port
-    this.serialPort =  this.gerSerial(serialPort, config);
+    this.serialPort =  this.getSerial(serialPort, config);
 
     // Homebridge
     this.Accessory = Accessory;
@@ -83,7 +84,7 @@ class NooLitePlatform {
 
   }
 
-  gerSerial(serialPortPath, config) {
+  getSerial(serialPortPath, config) {
     let platform = this;
 
     let serialPort = new SerialPort(serialPortPath, { autoOpen: false });
@@ -245,7 +246,7 @@ class NooLitePlatform {
   }
 
   sendCommand(command, callback) {
-    this.log.debug('Serail message to send: ', command);
+    this.log.debug('Serial message to send: ', command);
     this.serialPort.mtrfSerial.send(command, (err, nlRes) => {
       if (err) {
         this.log.error('Error on write: ', err.message);
