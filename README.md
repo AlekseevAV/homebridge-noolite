@@ -23,7 +23,8 @@ TG channel: https://t.me/Noolite (tg://t.me/Noolite)
               "serverPort": "8080",
               "periodicAccessoryUpdate": 5,
               "requestTtl": 1000,
-              "serialWriteDelayMs": 250
+              "serialWriteDelayMs": 250,
+              "immediatelyResponse": true
             }
           ]
         ...
@@ -33,6 +34,7 @@ TG channel: https://t.me/Noolite (tg://t.me/Noolite)
     * `periodicAccessoryUpdate` - periodically update NooLite-F accessories status (in seconds) _optional, default this feature is disabled_
     * `requestTtl` - waiting block response timeout in milliseconds
     * `serialWriteDelayMs` - delay between sending commands to blocks in milliseconds (if too short, MTRF adapter may not have enough time to process requests/responses)
+    * `immediatelyResponse` - allows to respond immediately on HB request, this will allow to show *Home* tab with many device without response error (due to TTL). Devices will be updated in foreground (if something changed)
     
     See `sampleConfig.json` file for example.
 

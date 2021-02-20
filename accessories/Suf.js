@@ -80,6 +80,10 @@ class Suf extends AccessoryBase {
 
     let command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
 
+    if (this.platform.immediatelyResponse){
+      callback(null, acc.value);
+    }
+
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
@@ -97,7 +101,9 @@ class Suf extends AccessoryBase {
         onValue = nlRes.d2 > 0;
       }
 
-      callback(null, onValue);
+      if (!this.platform.immediatelyResponse){
+        callback(null, onValue);  
+      }
     })
 
   }
