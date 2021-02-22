@@ -87,11 +87,15 @@ class Suf extends AccessoryBase {
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
-        callback(new Error('Error on write'));
+        if (!this.platform.immediatelyResponse){
+          callback(new Error('Error on write'));
+        }
         return;
       } else if (nlRes.isError()) {
         this.log('Error on response: ', nlRes);
-        callback(new Error('Error on response'));
+        if (!this.platform.immediatelyResponse){
+          callback(new Error('Error on response'));
+        }
         return;
       }
 
