@@ -9,6 +9,7 @@ class AccessoryBase {
     this.nlType = accessory.context.NooLite.type;
     this.nlChannel = accessory.context.NooLite.channel;
     this.nlId = accessory.context.NooLite.id;
+    this.state = {};
 
     return this.init();
   }

@@ -45,8 +45,13 @@ class NooLitePlatform {
     let serverPort = config['serverPort'] || 8080,
         serialPort = config['serialPort'];
 
-    this.periodicAccessoryUpdate = parseInt(config['periodicAccessoryUpdate']);
     this.immediatelyResponse = config['immediatelyResponse'] || false;
+    this.periodicAccessoryUpdate = parseInt(config['periodicAccessoryUpdate']);
+
+    // Use default periodicAccessoryUpdate if immediatelyResponse is specified and no periodicAccessoryUpdate provided
+    if (this.immediatelyResponse && !this.periodicAccessoryUpdate) {
+      this.periodicAccessoryUpdate = 5;
+    }
     
     // Initialize
     this.AccessoryUtil = new AccessoryUtil(platform);
