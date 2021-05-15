@@ -18,7 +18,8 @@ const availableAccessories = {
     'srfRGarageDoor': require('./SrfRGarageDoor'),
     'srfRWindow': require('./SrfRWindow'),
     'srfRWindowCovering': require('./SrfRWindowCovering'),
-    'SrfTermostat': require('./SrfTermostat')
+    'SrfTermostat': require('./SrfTermostat'),
+    'pbx1x': require('./Pbx1x')
 };
 
 
