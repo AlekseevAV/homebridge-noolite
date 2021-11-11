@@ -57,13 +57,9 @@ class Slf extends AccessoryBase {
     });
   }
 
-  getOnState(callback) {
-    this.log("get value");
-    
-    if (this.platform.immediatelyResponse){
-      return callback(null, this.state.on);
-    }
 
+  updateOnValue(callback, resolve){
+    
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
@@ -80,10 +76,17 @@ class Slf extends AccessoryBase {
         onValue = nlRes.d2 > 0;
       }
 
-      return callback(null, onValue);        
+      resolve(onValue);
     })
-
   }
+
+  getOnState(callback) {
+    const onCharacteristic = this.getOrCreateService(this.platform.Service.Lightbulb).getCharacteristic(this.platform.Characteristic.On);
+    const result = callback(null, this.state.on);
+    new Promise((resolve, reject) => { this.updateOnValue(callback, resolve) }).then((value) => { onCharacteristic.updateValue(value); });
+    return result;
+  }
+  
 
   setOnState(value, callback) {
     this.log("Set On characteristic to " + value);
