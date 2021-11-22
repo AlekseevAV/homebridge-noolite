@@ -80,30 +80,15 @@ class SufA extends AccessoryBase {
 
   getOnState(callback) {
     this.log("get value");
-
-    if (this.platform.immediatelyResponse){
-      return callback(null, this.state.on);
-    }
-
+    callback(null, this.state.on);
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
-        return callback(new Error('Error on write'));
       } else if (nlRes.isError()) {
         this.log('Error on response: ', nlRes);
-        return callback(new Error('Error on response'));
       }
-
-      let onValue = this.state.on;
-
-      if (nlRes.isState() && nlRes.fmt === 0) {
-        onValue = nlRes.d2 > 0;
-      }
-
-      return callback(null, onValue);  
     })
-
   }
 
   setOnState(value, callback) {
@@ -129,35 +114,15 @@ class SufA extends AccessoryBase {
 
   getBrightnessState(callback) {
     this.log("get brightness value");
-
-    if (this.platform.immediatelyResponse) {
-      return callback(null, this.state.brightness);
-    }
-
+    callback(null, this.state.brightness);
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
-        return callback(new Error('Error on write'));
       } else if (nlRes.isError()) {
         this.log('Error on response: ', nlRes);
-        return callback(new Error('Error on response'));
       }
-
-      let brightnessValue = this.state.brightness;
-
-      if (nlRes.isState() && nlRes.fmt === 0) {
-        brightnessValue = nlRes.d3;
-        if (brightnessValue > 100) {
-          brightnessValue = 100;
-        } else if (brightnessValue < 0) {
-          brightnessValue = 0;
-        }
-      }
-
-      return callback(null, brightnessValue);
     })
-
   }
 
   setBrightnessState(value, callback) {
