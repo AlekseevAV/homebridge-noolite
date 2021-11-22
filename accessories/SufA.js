@@ -78,13 +78,8 @@ class SufA extends AccessoryBase {
     });
   }
 
-  getOnState(callback) {
-    this.log("get value");
-
-    if (this.platform.immediatelyResponse){
-      return callback(null, this.state.on);
-    }
-
+  updateOnValue(callback, resolve){
+    
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
@@ -101,10 +96,18 @@ class SufA extends AccessoryBase {
         onValue = nlRes.d2 > 0;
       }
 
-      return callback(null, onValue);  
+      resolve(onValue);
     })
-
   }
+
+  getOnState(callback) {
+    const onCharacteristic = this.getOrCreateService(this.platform.Service.Lightbulb).getCharacteristic(this.platform.Characteristic.On);
+    const result = callback(null, this.state.on);
+    new Promise((resolve, reject) => { this.updateOnValue(callback, resolve) }).then((value) => { onCharacteristic.updateValue(value); });
+    return result;
+  }
+
+
 
   setOnState(value, callback) {
     this.log("Set On characteristic to " + value);
@@ -127,24 +130,17 @@ class SufA extends AccessoryBase {
 
   }
 
-  getBrightnessState(callback) {
-    this.log("get brightness value");
-
-    if (this.platform.immediatelyResponse) {
-      return callback(null, this.state.brightness);
-    }
-
+  updateBrightnessState(callback, resolve) {
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
+
+    let brightnessValue = this.state.brightness;
+
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
-        this.log('Error on write: ', err.message);
         return callback(new Error('Error on write'));
       } else if (nlRes.isError()) {
-        this.log('Error on response: ', nlRes);
         return callback(new Error('Error on response'));
       }
-
-      let brightnessValue = this.state.brightness;
 
       if (nlRes.isState() && nlRes.fmt === 0) {
         brightnessValue = nlRes.d3;
@@ -154,11 +150,17 @@ class SufA extends AccessoryBase {
           brightnessValue = 0;
         }
       }
-
-      return callback(null, brightnessValue);
+      resolve(brightnessValue);
     })
-
   }
+
+  getBrightnessState(callback) {
+    const onCharacteristic = this.getOrCreateService(this.platform.Service.Lightbulb).getCharacteristic(this.platform.Characteristic.Brightness);
+    const result = callback(null, this.state.on);
+    new Promise((resolve, reject) => { this.updateBrightnessState(callback, resolve) }).then((value) => { onCharacteristic.updateValue(value); });
+    return result;
+  }
+
 
   setBrightnessState(value, callback) {
     this.log("Set Brightness characteristic to " + value);
