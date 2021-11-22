@@ -162,7 +162,7 @@ class SufA extends AccessoryBase {
 
   setBrightnessState(value, callback) {
     this.log("Set Brightness characteristic to " + value);
-    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 0, value, 0, 0, 0, ...this.nlId.split(':'));
+    let command = new NooLiteRequest(this.nlChannel, 6, 2, 0, 0, 1, value, 0, 0, 0, ...this.nlId.split(':'));
 
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
