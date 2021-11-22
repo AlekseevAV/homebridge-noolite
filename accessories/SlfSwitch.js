@@ -58,16 +58,16 @@ class SlfSwitch extends AccessoryBase {
   }
 
 
-  updateOnValue(callback, resolve){
+  updateOnValue(reject, resolve){
     
     const command = new NooLiteRequest(this.nlChannel, 128, 2, 0, 0, 0, 0, 0, 0, 0, ...this.nlId.split(':'));
     this.platform.sendCommand(command, (err, nlRes) => {
       if (err) {
         this.log('Error on write: ', err.message);
-        return callback(new Error('Error on write'));
+        return reject('Error on write');
       } else if (nlRes.isError()) {
         this.log('Error on response: ', nlRes);
-        return callback(new Error('Error on response'));
+        return reject('Error on response');
       }
 
       let onValue = this.state.on;
@@ -83,7 +83,9 @@ class SlfSwitch extends AccessoryBase {
   getOnState(callback) {
     const onCharacteristic = this.getOrCreateService(this.platform.Service.Switch).getCharacteristic(this.platform.Characteristic.On);
     const result = callback(null, this.state.on);
-    new Promise((resolve, reject) => { this.updateOnValue(callback, resolve) }).then((value) => { onCharacteristic.updateValue(value); });
+    new Promise((resolve, reject) => { this.updateOnValue(reject, resolve) })
+        .then((value) => { onCharacteristic.updateValue(value); })
+        .catch((err) => { this.log('Error on get value: ', err); });
     return result;
   }
 
