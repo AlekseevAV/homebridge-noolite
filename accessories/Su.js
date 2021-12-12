@@ -46,7 +46,7 @@ class Su extends AccessoryBase {
       .on('set', (value, callback) => {
         this.log("Set brightness characteristic to " + value);
 
-        let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 1, 28 + Math.ceil(125 / 100 * value));
+        let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 1, 28 + Math.ceil(255 / 100 * value));
 
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
