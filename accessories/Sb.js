@@ -10,6 +10,9 @@ class Sb extends Su {
     return 'диммируемый блок со старым протоколом nooLite';
   }
 
+  minBrightness = 21;
+  maxBrightness = 132;
+
   getAccessoryInformation() {
         return {
             'Manufacturer': 'NooLite',

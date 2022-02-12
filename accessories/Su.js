@@ -14,6 +14,22 @@ class Su extends AccessoryBase {
     return 5;
   }
 
+  minBrightness = 41;
+  maxBrightness = 152;
+
+  percentToBrightnessValue(percent) {
+    const diff = this.maxBrightness - this.minBrightness;
+    if (percent <= 0) return 0
+    return Math.ceil((diff/100) * percent + this.minBrightness)
+  }
+
+  brightnessValueToPercent(brightnessValue) {
+    const diff = this.maxBrightness - this.minBrightness;
+    const brightnessFromZero = brightnessValue - this.minBrightness;
+    if (brightnessValue === 0) return 0
+    return Math.round(brightnessFromZero / (diff / 100))
+  }
+
   initOrCreateServices() {
     super.initOrCreateServices();
 
@@ -44,9 +60,10 @@ class Su extends AccessoryBase {
 
     brightness
       .on('set', (value, callback) => {
-        this.log("Set brightness characteristic to " + value);
+        let brightnessValue = this.percentToBrightnessValue(value);
+        this.log(`Set brightness characteristic to ${value}% -> ${brightnessValue}`);
 
-        let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 1, 28 + Math.ceil(255 / 100 * value));
+        let command = new NooLiteRequest(this.nlChannel, 6, 0, 0, 0, 1, brightnessValue);
 
         this.platform.sendCommand(command, (err, nlRes) => {
           if (err) {
@@ -80,7 +97,9 @@ class Su extends AccessoryBase {
           onCharacteristic.updateValue(1);
           break;
         case 6:
-          brightness.updateValue(Math.ceil(nlCmd.d0 / (255 / 100)));
+          const brightnessPercent = this.brightnessValueToPercent(nlCmd.d0)
+          this.log(`Update acc brightness ${nlCmd.d0} -> ${brightnessPercent}%`);
+          brightness.updateValue(brightnessPercent);
           break;
       }
     });
