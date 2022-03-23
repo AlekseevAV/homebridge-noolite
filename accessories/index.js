@@ -17,6 +17,7 @@ const availableAccessories = {
     'garageDoorSlf': require('./GarageDoorSlf'),
     'srfRDoor': require('./SrfRDoor'),
     'srfRGate': require('./SufGate'),
+    'sufDoor': require('./SufDoor'),
     'srfRGarageDoor': require('./SrfRGarageDoor'),
     'srfRWindow': require('./SrfRWindow'),
     'srfRWindowCovering': require('./SrfRWindowCovering'),
