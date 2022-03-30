@@ -2,7 +2,7 @@ const {NooLiteRequest} = require('../lib/serialClasses');
 const AccessoryBase = require('./AccessoryBase');
 
 
-class SufGate extends AccessoryBase {
+class SufDoor extends AccessoryBase {
   static displayName() {
     return 'SUF Door Temporary On';
   }
@@ -18,14 +18,13 @@ class SufGate extends AccessoryBase {
     super.initOrCreateServices();
 
     let door = this.getOrCreateService(this.platform.Service.Door);
-    this.currentState = door.getCharacteristic(this.platform.Characteristic.CurrentDoorState);
-    this.targetState = door.getCharacteristic(this.platform.Characteristic.TargetDoorState);
+    this.targetPosition = door.getCharacteristic(this.platform.Characteristic.TargetPosition);
 
-    this.targetState
+    this.targetPosition
       .on('set', (value, callback) => {
-        this.log("Set state characteristic to " + value);
+        this.log("Set TargetPosition characteristic to " + value);
 
-        if (value === this.platform.Characteristic.TargetDoorState.CLOSED) {
+        if (value === 0) {
           callback()
           return
         }
@@ -50,7 +49,7 @@ class SufGate extends AccessoryBase {
           }
 
           this.accessory.lastTimerId = setTimeout(function() {
-            this.targetState.setValue(this.platform.Characteristic.TargetDoorState.CLOSED);
+            this.targetPosition.setValue(0);
             this.accessory.lastTimerId = null;
           }.bind(this), 1500);
 
@@ -67,4 +66,4 @@ class SufGate extends AccessoryBase {
   }
 }
 
-module.exports = SufGate;
+module.exports = SufDoor;
