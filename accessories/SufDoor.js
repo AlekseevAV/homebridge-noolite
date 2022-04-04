@@ -11,7 +11,7 @@ class SufDoor extends AccessoryBase {
   }
 
   static getAccessoryCategory() {
-    return 4;
+    return 12;
   }
 
   initOrCreateServices() {
