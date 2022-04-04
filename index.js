@@ -92,7 +92,7 @@ class NooLitePlatform {
   getSerial(serialPortPath, config) {
     let platform = this;
 
-    let serialPort = new SerialPort(serialPortPath, { autoOpen: false });
+    let serialPort = new SerialPort(serialPortPath, { autoOpen: false, baudRate: config['serialBaudRate'] || 9600 });
 
     serialPort.tryToOpenPort = function(delayBetweenTries=5000) {
       if (this.isOpen) {

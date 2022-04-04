@@ -11,6 +11,7 @@
     {
       "platform": "NooLitePlatform",
       "serialPort": "/dev/tty.usbserial-AL032Z5U",
+      "serialBaudRate": 9600,
       "serverPort": "8080",
       "periodicAccessoryUpdate": 5,
       "requestTtl": 1000,

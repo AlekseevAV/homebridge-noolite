@@ -20,6 +20,7 @@ TG channel: https://t.me/Noolite (tg://t.me/Noolite)
             {
               "platform": "NooLitePlatform",
               "serialPort": "/dev/tty.usbserial-AL032Z5U",
+              "serialBaudRate": 9600,
               "serverPort": "8080",
               "periodicAccessoryUpdate": 5,
               "requestTtl": 1000,
@@ -30,6 +31,7 @@ TG channel: https://t.me/Noolite (tg://t.me/Noolite)
         ...
 
     * `serialPort` - path to MTRF-64 serial port _required_
+    * `serialBaudRate` - baud rate for serial port _optional, default: 9600_
     * `serverPort` - web-ui port for add new noolite accessories _optional, default: 8080_
     * `periodicAccessoryUpdate` - periodically update NooLite-F accessories status (in seconds) _optional, default this feature is disabled_
     * `requestTtl` - waiting block response timeout in milliseconds
